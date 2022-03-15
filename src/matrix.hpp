@@ -1,15 +1,23 @@
 #include<array>
 
+/* 
+*/
+
+template<typename T, size_t N>
 class Matrix {
 
-    int x_size;
-    int y_size;
+    int dim; // Number of dimensions
+    int size; // total number of elements
+    std::vector<int> shape; // shape: length of each dimension.
+    template <typename T, size_t N>
+    T container [N]; // linear array containing elements
 
 public:
     // Constructors and destructor
-    Matrix(int new_x = 0, int new_y = 0, int new_z = 0);
+    template <typename T, size_t N>
+    Matrix(int dim, int fill);
     ~Matrix();
-
+/*
     // General methods
     void print();
     std::array size();
@@ -29,5 +37,8 @@ public:
     Matrix operator @ (Matrix const &b);
     Matrix T(); // Transpose
     Matrix operator ' (); // Transpose
-
+*/
+private:
+    bool dim_size_validity(int &dim, int &size);
 };
+#include"matrix.cpp"
