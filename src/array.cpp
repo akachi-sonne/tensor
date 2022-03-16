@@ -1,16 +1,26 @@
 #include<iostream>
-#include"matrix.hpp"
+#include"array.hpp"
 
 // Constructors and destructor
 template <typename T, size_t N>
-Matrix::Matrix(int dim = 1, int fill = 0)
+Array::Array(int dim = 1, int fill = 0, std::vector<int> shape = N)
 {
+    this->size = N;
+    this->dim = dim;
     switch fill {
         case 0:
             // zeros
+            for(int i = 0; i < this->size; i++)
+            {
+                this->container[i] = 0;
+            }
             break;
         case 1:
             // ones
+            for(int i = 0; i < this->size; i++)
+            {
+                this->container[i] = 1;
+            }
             break;
         case 2:
             // rand
@@ -36,92 +46,92 @@ Matrix::Matrix(int dim = 1, int fill = 0)
 
 }
 
-Matrix::~Matrix()
+Array::~Array()
 {
 
 }
 /* future
 // General methods
-void Matrix::print() 
+void Array::print() 
 {
 
 }
 
-std::array Matrix::size() 
+std::array Array::size() 
 {
 
 }
 
-Matrix Matrix::resize() 
+Array Array::resize() 
 {
 
 }
 
 // Operations
 // All Math operation return a new matrix
-Matrix Matrix::add(Matrix const &b) 
+Array Array::add(Array const &b) 
 {
 
 }
-Matrix operator + (Matrix const &b) 
+Array operator + (Array const &b) 
 {
 
 }
 
-Matrix Matrix::subtr(Matrix const &b) 
+Array Array::subtr(Array const &b) 
 {
 
 }
-Matrix operator - (Matrix const &b) 
+Array operator - (Array const &b) 
 {
 
 }
 
 // matrix multiplication
-Matrix Matrix::mult(Matrix const &b) 
+Array Array::mult(Array const &b) 
 {
 
 }
-Matrix operator * (Matrix const &b) 
+Array operator * (Array const &b) 
 {
 
 }
 
 // scalar multiplication
-Matrix Matrix::mult(int &b) 
+Array Array::mult(int &b) 
 {
 
 }
-Matrix operator * (int &b) 
+Array operator * (int &b) 
 {
 
 }
 
 // dot product
-Matrix Matrix::dot(Matrix const &b) 
+Array Array::dot(Array const &b) 
 {
 
 }
 // dot product
-Matrix operator @ (Matrix const &b) 
+Array operator @ (Array const &b) 
 {
 
 }
 
 // Transpose
-Matrix Matrix::T() 
+Array Array::T() 
 {
 
 }
 // Transpose
-Matrix operator ' () 
+Array operator ' () 
 {
 
 }
 */
 
 // Helper methods
-bool Matrix::dim_size_validity(int &dim, int &size, std::vector<int> &shape)
+bool Array::dim_size_validity(int &dim, int &size, std::vector<int> &shape)
 {
     
 }
