@@ -1,42 +1,28 @@
-#include<array>
+#include<vector>
 
-/* 
-*/
-
-template<typename T, size_t N>
+template<typename T>
 class Array {
+    template<typename CT, size_t CN>
+    class Container {
+    public:
+        CT container [CN]; // linear array containing elements
+        Container();
+        ~Container();
+        void operator << (CT x);
+        void operator = (CT x);
+        void print();
+    };
 
     int dim; // Number of dimensions
     int size; // total number of elements
     std::vector<int> shape; // shape: length of each dimension.
-    T container [N]; // linear array containing elements
 
 public:
     // Constructors and destructor
-    Array(int dim, int fill, std::vector<int> shape);
+    Array(std::vector<unsigned int> shape);
     ~Array();
-/*
-    // General methods
     void print();
-    std::array size();
-    Array resize();
+    void operator << (T2 x);
+    void operator = (T2 x);
 
-    // Operations
-    // All Math operation return a new matrix
-    Array add(Array const &b);
-    Array operator + (Array const &b);
-    Array subtr(Array const &b);
-    Array operator - (Array const &b);
-    Array mult(Array const &b); // matrix multiplication
-    Array operator * (Array const &b);
-    Array mult(int &b); // scalar multiplication
-    Array operator * (int &b); 
-    Array dot(Array const &b); // dot product
-    Array operator @ (Array const &b);
-    Array T(); // Transpose
-    Array operator ' (); // Transpose
-*/
-private:
-    bool dim_size_validity(int &dim, int &size);
 };
-#include"array.cpp"

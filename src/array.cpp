@@ -1,137 +1,92 @@
 #include<iostream>
+#include<vector>
 #include"array.hpp"
 
-// Constructors and destructor
-template <typename T, size_t N>
-Array::Array(int dim = 1, int fill = 0, std::vector<int> shape = N)
-{
-    this->size = N;
-    this->dim = dim;
-    switch fill {
-        case 0:
-            // zeros
-            for(int i = 0; i < this->size; i++)
-            {
-                this->container[i] = 0;
-            }
-            break;
-        case 1:
-            // ones
-            for(int i = 0; i < this->size; i++)
-            {
-                this->container[i] = 1;
-            }
-            break;
-        case 2:
-            // rand
-            break;
-        case 3:
-            // manual - requires input
-            break;
-        case 4:
-            // object - requires input
-            break;
-        default:
-            // invalid input
-            try {
-                throw fill;
-            }
-            catch {
-                std::cout << "Invalid input on constructor - fill: " << fill << "\n";
-                std::cout << "\'fill\' parameter must be int from 0-4\n";
-                std::cout << "0: zeros\n1: ones\n2: rand\n3: manual(requires input)\n4: obj(requires input)\n;
-                break;
-            }
-    }
 
+
+// outer class constructors and destructor
+template<typename T>
+Array::Array(std::vector<unsigned int> shape)
+{
+    this->shape = shape;
+    this->dim = shape.size();
+    this->size = 1;
+    for (int i = 0; i < this->dim; i++)
+    {
+        this->size *= shape[i];
+    }
+    Container<T, size> arr;
 }
 
 Array::~Array()
 {
-
+    delete[] this->container;
+    delete this->shape;
+    delete this->dim;
+    delete this->size;
 }
-/* future
-// General methods
-void Array::print() 
+
+// << operator assigns any single primitive type to every
+// component of the array.
+
+void Array::operator << (T x)
 {
-
+    this->arr << x;
 }
 
-std::array Array::size() 
+// = operator makes a deep copy of any iterable, including
+// objects from this class.
+void Array::operator = (T x)
 {
-
+    this->arr = x;
 }
 
-Array Array::resize() 
+void Array::print()
 {
-
+    this->arr.print();
 }
 
-// Operations
-// All Math operation return a new matrix
-Array Array::add(Array const &b) 
-{
-
-}
-Array operator + (Array const &b) 
-{
-
-}
-
-Array Array::subtr(Array const &b) 
-{
-
-}
-Array operator - (Array const &b) 
-{
-
-}
-
-// matrix multiplication
-Array Array::mult(Array const &b) 
-{
-
-}
-Array operator * (Array const &b) 
-{
-
-}
-
-// scalar multiplication
-Array Array::mult(int &b) 
-{
-
-}
-Array operator * (int &b) 
-{
-
-}
-
-// dot product
-Array Array::dot(Array const &b) 
-{
-
-}
-// dot product
-Array operator @ (Array const &b) 
-{
-
-}
-
-// Transpose
-Array Array::T() 
-{
-
-}
-// Transpose
-Array operator ' () 
-{
-
-}
+/* Nested class; simple array methods.
+* 
+* This allows size declaration to remain ambiguous and be calculated via 'shape'
+* attribute in the main class' constructor.
+*
+* We can also simulate a dynamic array by deleting and creating a new object without
+* affecting the main object the user directly interacts with.
+*
+* Note: The resizing aspect of this approach will eat some processing time and is not as 
+* fast as an std::vector. This class should not be used if frequent resizing is the main goal
+* for what will be an otherwise simple 1-D array.
 */
 
-// Helper methods
-bool Array::dim_size_validity(int &dim, int &size, std::vector<int> &shape)
+Array::Container::Container()
 {
-    
+}
+Array::Container::~Container()
+{
+    delete[] this->container;
+}
+
+void Array::Container::operator << (CT x)
+{
+    for (int i = 0; i < CN; i++)
+    {
+        this->container[i] = x;
+    }
+}
+
+void Array::Container::operator = (CT x)
+{
+    for (int i =0; i< CN; i++)
+    {
+        this->container[i] = x;
+    }
+}
+
+void Array::Container::print()
+{
+    for (int i = 0; i < CN; i++)
+    {
+        std::cout << this->container[i] << "\n";
+    }
 }
