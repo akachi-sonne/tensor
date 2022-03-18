@@ -1,10 +1,10 @@
 #include<iostream>
-#include"array.hpp"
-#include"array.cpp"
+#include "array.hpp"
 
-int main() 
+int main()
 {
-    Array a<int> ({15});
+    Array<int> a(10);
+    a.print();
     a << 0;
     a.print();
     a << 1;
