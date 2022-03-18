@@ -13,7 +13,7 @@ public:
     Array(std::vector<unsigned int> shape);
     ~Array();
     void print();
-    void operator<< (T &rhs);
+    void operator<< (T rhs);
 };
 
 template<typename T>
@@ -58,7 +58,7 @@ void Array<T>::print()
     std::cout << "\n";
 }
 template<typename T>
-void Array<T>::operator <<(T &rhs)
+void Array<T>::operator <<(T rhs)
 {
     for (int i = 0; i < this->size; i++)
     {
