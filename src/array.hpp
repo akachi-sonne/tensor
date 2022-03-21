@@ -15,11 +15,11 @@ public:
     Array(std::vector<unsigned int> shape);
     ~Array();
     void print_flat();
-//    void print();
+    void print();
     void operator<< (T rhs);
     int where(std::vector<unsigned int> coords);
 private:
-//    void print_helper();
+    void print_helper();
 
 };
 
@@ -72,19 +72,74 @@ void Array<T>::print_flat()
     }
     std::cout << "\n";
 }
-/*
-template<typename T>
-void Array<T>::print_helper(std::array<unsigned int> this->dims> &tracker, unsigned int &row_counter)
-{
-    
-}
 template<typename T>
 void Array<T>::print()
 {
-    std::array<unsigned int> this->dims> tracker;
-    unsigned int row_counter = this->dims;
+    std::cout << "Array shape: {";
+    for (int i = 0; i < this->dims; i++)
+    {
+        std::cout << this->shape[i];
+        if (i < this->dims - 1)
+        {
+            std::cout << ", ";
+        }
+        else
+        {
+            std::cout << "}" << std::endl;
+        }
+    }
+    std::cout << "Number of dimensions: " << this->dims << std::endl;
+    std::cout << "Total elements: " << this->size << std::endl;
+    int which_dim = this->dims;
+    bool new_row = false;
+    int tracker[this->dims] = {0};
+    std::cout << "[";
+    for (int i = 0; i < this->size; i++)
+    {
+        int spaces = this->dims - which_dim;
+        if (new_row)
+        {
+            for (int i = 0; i < spaces; i++)
+            {
+                std::cout << " ";
+            }
+        }
+        else if (i != 0)
+        {
+            std::cout << ", ";
+        }
+        new_row = false;
+        while (which_dim > 1)
+        {
+            std::cout << "[";
+            which_dim--;
+        }
+        std::cout << *(this->container + i);
+        // update tracker
+        for (int j = this->dims-1; j >= 0; j--)
+        {
+            tracker[j]++;
+            which_dim = this->dims - j;
+            if (tracker[j] >= this->shape[j])
+            {
+                which_dim++;
+                tracker[j] = 0;
+                new_row = true;
+                std::cout << "]";
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (new_row && i < this->size - 1)
+        {
+            std::cout << ",\n ";
+        }
+    }
+    std::cout <<"\n" << std::endl;
 }
-*/
+
 template<typename T>
 void Array<T>::operator <<(T rhs)
 {
