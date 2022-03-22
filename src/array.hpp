@@ -1,5 +1,4 @@
 #include<iostream>
-#include<array>
 #include<vector>
 #include<stdexcept>
 
@@ -14,10 +13,13 @@ public:
     Array(unsigned int size);
     Array(std::vector<unsigned int> shape);
     ~Array();
+    unsigned int get_size();
+    unsigned int get_dims();
+    std::string get_shape();
+    void print(bool verbose = false);
     void print_flat();
-    void print();
-    void operator<< (T rhs);
-    int where(std::vector<unsigned int> coords);
+    void operator =(T rhs);
+    int index(std::vector<unsigned int> coords);
 private:
     void print_helper();
 
@@ -56,40 +58,52 @@ Array<T>::~Array()
     delete[] this->container;
 }
 template<typename T>
-void Array<T>::print_flat()
+unsigned int Array<T>::get_size()
 {
-    std::cout << "[";
-    for (int i = 0; i < this->size; i++)
-    {
-        std::cout << *(this->container + i);
-        if (i < this->size -1)
-        {
-            std::cout << ", ";
-        } else 
-        {
-            std::cout << "]" << std::endl;
-        }
-    }
-    std::cout << "\n";
+    return size;
 }
 template<typename T>
-void Array<T>::print()
+unsigned int Array<T>::get_dims()
 {
-    std::cout << "Array shape: {";
+    return dims;
+}
+template<typename T>
+std::string Array<T>::get_shape()
+{
+    std::string str = "{";
     for (int i = 0; i < this->dims; i++)
     {
-        std::cout << this->shape[i];
+        str += std::to_string(this->shape[i]);
         if (i < this->dims - 1)
         {
-            std::cout << ", ";
-        }
-        else
-        {
-            std::cout << "}" << std::endl;
+            str += ", ";
         }
     }
-    std::cout << "Number of dimensions: " << this->dims << std::endl;
-    std::cout << "Total elements: " << this->size << std::endl;
+    str += "}";
+    return str;
+}
+template<typename T>
+void Array<T>::print(bool verbose)
+{
+    if (verbose)
+    {
+        std::cout << "Array shape: {";
+        for (int i = 0; i < this->dims; i++)
+        {
+            std::cout << this->shape[i];
+            if (i < this->dims - 1)
+            {
+                std::cout << ", ";
+            }
+            else
+            {
+                std::cout << "}" << std::endl;
+            }
+        }
+        std::cout << "Number of dimensions: " << this->dims << std::endl;
+        std::cout << "Total elements: " << this->size << std::endl;
+    }
+    
     int which_dim = this->dims;
     bool new_row = false;
     int tracker[this->dims] = {0};
@@ -139,9 +153,25 @@ void Array<T>::print()
     }
     std::cout <<"\n" << std::endl;
 }
-
 template<typename T>
-void Array<T>::operator <<(T rhs)
+void Array<T>::print_flat()
+{
+    std::cout << "[";
+    for (int i = 0; i < this->size; i++)
+    {
+        std::cout << *(this->container + i);
+        if (i < this->size -1)
+        {
+            std::cout << ", ";
+        } else 
+        {
+            std::cout << "]" << std::endl;
+        }
+    }
+    std::cout << "\n";
+}
+template<typename T>
+void Array<T>::operator =(T rhs)
 {
     for (int i = 0; i < this->size; i++)
     {
@@ -149,11 +179,11 @@ void Array<T>::operator <<(T rhs)
     }
 }
 template<typename T>
-int Array<T>::where(std::vector<unsigned int> coords)
+int Array<T>::index(std::vector<unsigned int> coords)
 {
     if (coords.size() != this->dims)
     {
-        throw std::invalid_argument("coordinate vector input must match num dimensions");
+        throw std::invalid_argument("Invalid input: coordinate vector input must match num dimensions.");
     }
     int index = 0;
     for (int i = 0; i < this->dims; i++)
