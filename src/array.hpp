@@ -18,6 +18,17 @@ public:
     std::string get_shape();
     void print(bool verbose = false);
     void print_flat();
+    // void sort();
+    // void reverse();
+    // T mean();
+    // T median();
+    // T mode();
+    // T max();
+    // T min();
+    // bool every(); // Accepts a lambda. Checks if every elements passes a test.
+    // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
+    // Array<T> concat();
+    // Array<T> slice();
     void operator =(T rhs);
     int index(std::vector<unsigned int> coords);
 private:
@@ -103,7 +114,7 @@ void Array<T>::print(bool verbose)
         std::cout << "Number of dimensions: " << this->dims << std::endl;
         std::cout << "Total elements: " << this->size << std::endl;
     }
-    
+
     int which_dim = this->dims;
     bool new_row = false;
     int tracker[this->dims] = {0};
