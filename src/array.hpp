@@ -16,7 +16,9 @@
  * -------------------------------------------------------------------------
  */
 
-/* @file array.hpp
+/* 
+ * -------------------------------------------------------------------------
+ * @file array.hpp
  * @author Doug Palmer
  * @version 1.0
  *
@@ -25,34 +27,84 @@
  * Multidimensional array class template stored in contiguous memory on
  * the heap.
  *
- * For usage, see the README.md file at: https://github.com/akachi-sonne/clin/blob/main/README.md
- *
+ * For full usage, see the README.md file at:
+ * https://github.com/akachi-sonne/clin/blob/main/README.md
+ * -------------------------------------------------------------------------
  */
 
-
-#define NDEBUG // Uncomment to turn on debugging
+#ifndef ARRAY_H
+#define ARRAY_H
 
 #include<iostream>
 #include<vector>
 #include<stdexcept>
+
+/* comment out the following line to turn on debugging. */
+#define NDEBUG
 #include<cassert>
 
 template<typename T>
 class Array
-{
+{   /*******************************
+     * Private Member Declarations *
+     *******************************/
+
+    // Full size of container. i.e. Number of elements in array
     unsigned int size;
+
+    // Number of dimensions.
     unsigned int dims;
+
+    // Size of each dimension.
     std::vector<unsigned int> shape;
+
+    // Contiguous block of memory for element storage.
     T * container = new T[1];
+
+
+    /******************************
+     * Public Method Declarations *
+     ******************************/
+
 public:
+
+    // Constructor that takes an unsigned integer as size.
+    // Basically a creates an empty linear array of length 'size'.
+    // eg. Array x(5); creates linear array of length 5.
     Array(unsigned int size);
+
+    // Constructor taking a shape vector as a parameter.
+    // Creates any shape N-dimensional array.
     Array(std::vector<unsigned int> shape);
+
+    // Destructor.
     ~Array();
+
+    // Returns this->size.
     unsigned int get_size();
+
+    // Returns this->dims.
     unsigned int get_dims();
+
+    // Returns this->shape.
     std::string get_shape();
+
+
+    // Prints Array according to current shape.
+    // Passing a truthy parameter invokes verbose printing,
+    // which will include size, shape, and dims in the cout 
+    // statement.
+    //
     void print(bool verbose = false);
+
+
+    // Prints array of any dimension as if 1-dimensional.
+    //
+    // Does *not* include a verbose option.
+    //
     void print_flat();
+
+    // ******************
     // void sort();
     // void reverse();
     // T mean();
@@ -64,14 +116,48 @@ public:
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
     // Array<T> concat();
     // Array<T> slice();
-    void operator =(T rhs);
-    T& operator [](int index);
-    T& operator ()(std::vector<unsigned int> index);
-    int get_index(std::vector<unsigned int> coordinates);
-private:
-    void print_helper();
+    // ******************
 
-};
+
+    // Copy assignment operator.
+    //
+    // Will assign individual value across every element if passed like:
+    // object = value;
+    //
+    // Will assign value to individual element if passed like:
+    // object[index] = value;
+    //
+    void operator =(T rhs);
+
+    // Array index operator
+    //
+    // Accesses value based on 1-dimensional index.
+    // For N-dimensional index access, use () operator.
+    //
+    // Will return reference to value of index.
+    // Can be used for value access or assignment to object.
+    //
+    T& operator [](int index);
+
+    // () Array index operator
+    //
+    // Accesses value based on N-dimensional indice.
+    //
+    // Will return reference to value of index.
+    // Can be used for value access or assignment.
+    //
+    T& operator ()(std::vector<unsigned int> index);
+
+    // Returns 1-dimensional equivalent to n-dimensional
+    // indice parameters.
+    int get_index(std::vector<unsigned int> coordinates);
+
+}; // End of Array class declarations.
+
+
+/***********************
+ * Array Class Methods *
+ ***********************/
 
 template<typename T>
 Array<T>::Array(unsigned int size)
@@ -262,3 +348,5 @@ int Array<T>::get_index(std::vector<unsigned int> coordinates)
     }
     return index + coordinates[this->dims - 1];
 }
+
+#endif
