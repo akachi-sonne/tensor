@@ -1,8 +1,12 @@
 #include<iostream>
+#include<stdlib.h>
+#include<time.h>
 #include "array.hpp"
 
 int main()
 {
+    srand (time(NULL));
+
     Array<int> a(10);
     a.print_flat();
     a = 1;
@@ -21,7 +25,15 @@ int main()
     d.print(1);
     d({0,0,0,1,0}) = 5;
     d.print();
-
+    
+    Array<int> e(6);
+    for (int i = 0; i < e.get_size(); i++)
+    {
+        e[i] = rand() % 100;
+    }
+    e.print();
+    std::cout << "e.max(): " << e.max() << std::endl;
+    std::cout << "e.min(): " << e.min() << std::endl;
 
     std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
     std::cout << "coordinate {0,0,1} (should be 1): " << b.get_index({0,0,1}) << std::endl;

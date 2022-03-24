@@ -110,14 +110,17 @@ public:
     // T mean();
     // T median();
     // T mode();
-    // T max();
-    // T min();
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
     // Array<T> concat();
     // Array<T> slice();
     // ******************
 
+    // Returns max value in container.
+    T max();
+
+    // Returns min value in container.
+    T min();
 
     // Copy assignment operator.
     //
@@ -304,6 +307,35 @@ void Array<T>::print_flat()
     }
     std::cout << "\n";
 }
+
+template<typename T>
+T Array<T>::max()
+{
+    int max = *(this->container);
+    for (int i = 1; i < this->size; i++)
+    {
+        if (max < *(this->container + i))
+        {
+            max = *(this->container + i);
+        }
+    }
+    return max;
+}
+
+template<typename T>
+T Array<T>::min()
+{
+    int min = *(this->container);
+    for (int i = 1; i < this->size; i++)
+    {
+        if (min > *(this->container + i))
+        {
+            min = *(this->container + i);
+        }
+    }
+    return min;
+}
+
 template<typename T>
 void Array<T>::operator =(T rhs)
 {
