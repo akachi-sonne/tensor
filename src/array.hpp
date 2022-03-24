@@ -30,7 +30,7 @@
  */
 
 
-//#define NDEBUG // Uncomment to turn on debugging
+#define NDEBUG // Uncomment to turn on debugging
 
 #include<iostream>
 #include<vector>
@@ -229,7 +229,7 @@ void Array<T>::operator =(T rhs)
 template<typename T>
 T& Array<T>::operator [](int index)
 {
-    // static_assert(index < this->size, "Invalid parameter: Index out of range!");
+    assert(index < this->size);
     if (index >= 0)
     {
         return *(this->container + index);
@@ -237,7 +237,7 @@ T& Array<T>::operator [](int index)
     else
     {
         int neg_index = this->size - (index - (2 * index));
-        // static_assert(neg_index < this->size, "Invalid parameter: Index out of range!");
+        assert(neg_index < this->size);
         return *(this->container + neg_index);
     }
 }
@@ -251,12 +251,7 @@ T& Array<T>::operator ()(std::vector<unsigned int> index)
 template<typename T>
 int Array<T>::get_index(std::vector<unsigned int> coordinates)
 {
-    /*
-    static_assert(coordinates.size() == this->dims, "Invalid parameter: Coordinates passed does not equal shape!");
-    {
-        throw std::invalid_argument();
-    }
-    */
+    assert(coordinates.size() == this->dims);
     int index = 0;
     for (int i = 0; i < this->dims; i++)
     {
