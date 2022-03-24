@@ -1,6 +1,8 @@
+// #define NDEBUG
 #include<iostream>
 #include<vector>
 #include<stdexcept>
+#include<cassert>
 
 template<typename T>
 class Array
@@ -30,7 +32,9 @@ public:
     // Array<T> concat();
     // Array<T> slice();
     void operator =(T rhs);
-    int index(std::vector<unsigned int> coords);
+    T& operator [](int index);
+    // T operator [](std::vector<int> index);
+    int get_index(std::vector<unsigned int> coordinates);
 private:
     void print_helper();
 
@@ -190,19 +194,44 @@ void Array<T>::operator =(T rhs)
     }
 }
 template<typename T>
-int Array<T>::index(std::vector<unsigned int> coords)
+T& Array<T>::operator [](int index)
 {
-    if (coords.size() != this->dims)
+    // static_assert(index < this->size, "Invalid parameter: Index out of range!");
+    if (index >= 0)
     {
-        throw std::invalid_argument("Invalid input: coordinate vector input must match num dimensions.");
+        return *(this->container + index);
     }
+    else
+    {
+        int neg_index = this->size - (index - (2 * index));
+        // static_assert(neg_index < this->size, "Invalid parameter: Index out of range!");
+        return *(this->container + neg_index);
+    }
+}
+/*
+template<typename T>
+T Array<T>::operator [](std::vector<int> index)
+{
+    static_assert(index.size() == this->dims, "Invalid parameter: Index passed does not equal shape!");
+    static_assert()
+}
+*/
+template<typename T>
+int Array<T>::get_index(std::vector<unsigned int> coordinates)
+{
+    /*
+    static_assert(coordinates.size() == this->dims, "Invalid parameter: Coordinates passed does not equal shape!");
+    {
+        throw std::invalid_argument();
+    }
+    */
     int index = 0;
     for (int i = 0; i < this->dims; i++)
     {
         for (int j = this->dims -1; j > i; j--)
         {
-            index += coords[i] * this->shape[j];
+            index += coordinates[i] * this->shape[j];
         }
     }
-    return index + coords[this->dims - 1];
+    return index + coordinates[this->dims - 1];
 }
