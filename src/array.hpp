@@ -30,7 +30,8 @@
  */
 
 
-// #define NDEBUG
+//#define NDEBUG // Uncomment to turn on debugging
+
 #include<iostream>
 #include<vector>
 #include<stdexcept>
@@ -65,7 +66,7 @@ public:
     // Array<T> slice();
     void operator =(T rhs);
     T& operator [](int index);
-    // T operator [](std::vector<int> index);
+    T& operator ()(std::vector<unsigned int> index);
     int get_index(std::vector<unsigned int> coordinates);
 private:
     void print_helper();
@@ -240,14 +241,13 @@ T& Array<T>::operator [](int index)
         return *(this->container + neg_index);
     }
 }
-/*
+
 template<typename T>
-T Array<T>::operator [](std::vector<int> index)
+T& Array<T>::operator ()(std::vector<unsigned int> index)
 {
-    static_assert(index.size() == this->dims, "Invalid parameter: Index passed does not equal shape!");
-    static_assert()
+    return *(this->container + get_index(index));
 }
-*/
+
 template<typename T>
 int Array<T>::get_index(std::vector<unsigned int> coordinates)
 {

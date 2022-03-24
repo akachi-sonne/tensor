@@ -19,6 +19,8 @@ int main()
     c.print();
     Array<int> d({2,2,2,2,2});
     d.print(1);
+    d({0,0,0,1,0}) = 5;
+    d.print();
 
 
     std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
