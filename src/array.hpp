@@ -61,7 +61,6 @@ class Array
     // Contiguous block of memory for element storage.
     T * container = new T[1];
 
-
     /******************************
      * Public Method Declarations *
      ******************************/
@@ -81,13 +80,13 @@ public:
     ~Array();
 
     // Returns this->size.
-    unsigned int get_size();
+    unsigned int get_size() const;
 
     // Returns this->dims.
-    unsigned int get_dims();
+    unsigned int get_dims() const;
 
     // Returns this->shape.
-    std::string get_shape();
+     std::string get_shape() const;
 
 
     // Prints Array according to current shape.
@@ -111,7 +110,7 @@ public:
     // void reverse();
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
-    // Array<T> concat(); // create extra pointer that can be assigned address of another array!!
+    // Array<T> concat(); // deep concatenation. Creates new object.
     // Array<T> slice();
     // ******************
 
@@ -201,17 +200,17 @@ Array<T>::~Array()
     delete[] this->container;
 }
 template<typename T>
-unsigned int Array<T>::get_size()
+unsigned int Array<T>::get_size() const
 {
     return size;
 }
 template<typename T>
-unsigned int Array<T>::get_dims()
+unsigned int Array<T>::get_dims() const
 {
     return dims;
 }
 template<typename T>
-std::string Array<T>::get_shape()
+std::string Array<T>::get_shape() const
 {
     std::string str = "{";
     for (int i = 0; i < this->dims; i++)
