@@ -105,16 +105,22 @@ public:
     void print_flat();
 
     // ******************
+    // * future methods *
+    // ******************
     // void sort();
     // void reverse();
-    // T mean();
-    // T median();
-    // T mode();
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
-    // Array<T> concat();
+    // Array<T> concat(); // create extra pointer that can be assigned address of another array!!
     // Array<T> slice();
     // ******************
+
+    T sum();
+
+    // Averages
+    T mean();
+    //T median();
+    //T mode();
 
     // Returns max value in container.
     T max();
@@ -308,6 +314,39 @@ void Array<T>::print_flat()
     std::cout << "\n";
 }
 
+template<typename T>
+T Array<T>::sum()
+{
+    T total = 0;
+    for (int i = 0; i < this->size; i++)
+    {
+        total += *(this->container + i);
+    }
+    return total;
+}
+
+template<typename T>
+T Array<T>::mean()
+{
+    return float(sum() / this->size);
+}
+
+/* need to write sort() first
+ *
+template<typename T>
+T Array<T>::median()
+{
+
+}
+ *
+ */
+/*
+template<typename T>
+T Array<T>::mode()
+{
+
+}
+*/
 template<typename T>
 T Array<T>::max()
 {

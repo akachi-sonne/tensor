@@ -34,6 +34,8 @@ int main()
     e.print();
     std::cout << "e.max(): " << e.max() << std::endl;
     std::cout << "e.min(): " << e.min() << std::endl;
+    std::cout << "e.sum(): " << e.sum() << std::endl;
+    std::cout << "e.mean(): " << e.mean() << std::endl;
 
     std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
     std::cout << "coordinate {0,0,1} (should be 1): " << b.get_index({0,0,1}) << std::endl;
