@@ -25,13 +25,18 @@ int main()
     d.print(1);
     d({0,0,0,1,0}) = 5;
     d.print();
-    
-    Array<int> e(6);
+
+    Array<int> e(25);
     for (int i = 0; i < e.get_size(); i++)
     {
         e[i] = rand() % 100;
     }
+    std::cout << "e with random init: " << std::endl;
     e.print();
+    std::cout << "e after sort(): " << std::endl;
+    e.sort();
+    e.print();
+
     std::cout << "e.max(): " << e.max() << std::endl;
     std::cout << "e.min(): " << e.min() << std::endl;
     std::cout << "e.sum(): " << e.sum() << std::endl;

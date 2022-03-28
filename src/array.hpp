@@ -38,6 +38,7 @@
 #include<iostream>
 #include<vector>
 #include<stdexcept>
+#include<cmath>
 
 /* comment out the following line to turn on debugging. */
 #define NDEBUG
@@ -86,7 +87,7 @@ public:
     unsigned int get_dims() const;
 
     // Returns this->shape.
-     std::string get_shape() const;
+    std::string get_shape() const;
 
 
     // Prints Array according to current shape.
@@ -106,13 +107,15 @@ public:
     // ******************
     // * future methods *
     // ******************
-    // void sort();
     // void reverse();
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
     // Array<T> concat(); // deep concatenation. Creates new object.
     // Array<T> slice();
     // ******************
+
+    // Merge sort algorithm
+    void sort();
 
     T sum();
 
@@ -159,6 +162,9 @@ public:
     // Returns 1-dimensional equivalent to n-dimensional
     // indice parameters.
     int get_index(std::vector<unsigned int> coordinates);
+
+private:
+    void sort_worker(T * arr, const int sz);
 
 }; // End of Array class declarations.
 
@@ -311,6 +317,95 @@ void Array<T>::print_flat()
         }
     }
     std::cout << "\n";
+}
+
+template<typename T>
+void Array<T>::sort_worker(T * arr, const int sz)
+{
+    // base case
+    if (sz == 1)
+    {
+        return;
+    }
+
+    // If size > 1, split in half and make recursive calls
+    // until all sub-arrays are of size 1.
+    const int lsz = floor(sz / 2); // left sub-array size
+    const int rsz = sz - lsz; // right sub-array size
+
+    // Heap allocated sub-arrays to avoid stack overflow
+    // from recursive calls.
+    T * larr = new T[lsz]; // left
+    T * rarr = new T[rsz]; // right
+
+    // Assign first half of input array to larr and second
+    // half to rarr.
+    int count = 0;
+    for (int i = 0; i < lsz; i++)
+    {
+        *(larr + i) = *(arr + count);
+        count++;
+    }
+    for (int i = 0; i < rsz; i++)
+    {
+        *(rarr + i) = *(arr + count);
+        count++;
+    }
+
+    // recursive calls
+    sort_worker(larr, lsz);
+    sort_worker(rarr, rsz);
+
+    // Sub-arrays should now be sorted.
+    // Proceed with merging.
+    int index = 0;
+    int lindex = 0;
+    int rindex = 0;
+    while (lindex < lsz && rindex < rsz)
+    {
+        // Compare next index in larr and rarr
+        // to insert the smaller of each as the next
+        // element of the input array "arr".
+        if (*(larr + lindex) < *(rarr + rindex))
+        {
+            *(arr + index) = *(larr + lindex);
+            lindex++;
+            index++;
+        }
+        else
+        {
+            *(arr + index) = *(rarr + rindex);
+            rindex++;
+            index++;
+        }
+    }
+
+    // Add any remaining elements from either sub-array.
+    while (lindex < lsz)
+    {
+        *(arr + index) = *(larr + lindex);
+        lindex++;
+        index++;
+    }
+    while (rindex < rsz)
+    {
+        *(arr + index) = *(rarr + rindex);
+        rindex++;
+        index++;
+    }
+
+    // free up any memory allocated to subs
+    delete[] larr;
+    delete[] rarr;
+
+    return;
+} // end of sort_worker
+
+template<typename T>
+void Array<T>::sort()
+{
+    sort_worker(this->container, this->size);
+    return;
 }
 
 template<typename T>
