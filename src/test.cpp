@@ -33,9 +33,11 @@ int main()
     }
     std::cout << "e with random init: " << std::endl;
     e.print();
+    std::cout << "sorted? " << e.is_sorted() << std::endl;
     std::cout << "e after sort(): " << std::endl;
     e.sort();
     e.print();
+    std::cout << "sorted? " << e.is_sorted() << std::endl;
 
     std::cout << "e.max(): " << e.max() << std::endl;
     std::cout << "e.min(): " << e.min() << std::endl;

@@ -116,6 +116,7 @@ public:
 
     // Merge sort algorithm
     void sort();
+    bool is_sorted();
 
     T sum();
 
@@ -406,6 +407,19 @@ void Array<T>::sort()
 {
     sort_worker(this->container, this->size);
     return;
+}
+
+template<typename T>
+bool Array<T>::is_sorted()
+{
+    for (int i = 0; i < this->size - 1; i++)
+    {
+        if (*(this->container + i) > *(this->container + i + 1))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 template<typename T>
