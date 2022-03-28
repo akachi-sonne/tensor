@@ -116,13 +116,15 @@ public:
 
     // Merge sort algorithm
     void sort();
+
+    // sorted? true or false
     bool is_sorted();
 
     T sum();
 
     // Averages
     T mean();
-    //T median();
+    T median();
     //T mode();
 
     // Returns max value in container.
@@ -439,15 +441,24 @@ T Array<T>::mean()
     return float(sum() / this->size);
 }
 
-/* need to write sort() first
- *
 template<typename T>
 T Array<T>::median()
 {
+    assert(this->is_sorted());
 
+    int mid = floor(this->size/2);
+    if (this->size % 2 == 0)
+    {
+        T l = *(this->container + mid);
+        T r = *(this->container + mid + 1);
+        return (l + r) / 2;
+    }
+    else
+    {
+        return *(this->container + mid);
+    }
 }
- *
- */
+
 /*
 template<typename T>
 T Array<T>::mode()

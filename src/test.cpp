@@ -38,6 +38,7 @@ int main()
     e.sort();
     e.print();
     std::cout << "sorted? " << e.is_sorted() << std::endl;
+    std::cout << "e median: " << e.median() << std::endl;
 
     std::cout << "e.max(): " << e.max() << std::endl;
     std::cout << "e.min(): " << e.min() << std::endl;
