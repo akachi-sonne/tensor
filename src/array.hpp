@@ -115,23 +115,26 @@ public:
     // ******************
 
     // Merge sort algorithm
-    void sort();
-
-    // reverse sort
-    //void rsort();
+    void sort(bool reverse = false);
 
     // reverses elements in place
     void reverse();
 
-    // sorted? true or false
+    // Returns true if sorted in either ascending or descending order; else returns false.
     bool is_sorted();
 
+    // Simple addition of all elements.
     T sum();
 
-    // Averages
+    /* Averages */
+
+    // Returns sum()/size()
     T mean();
-    T median(); // List must be sorted prior to call
-    std::vector<int> mode(); // returns vector to account for potential multi-mode scenario
+    // Returns middle most element or average of two middle elements.
+    // Array must be sorted in either ascending or descending order.
+    T median();
+    // Returns most common element(s) as vector to account for potential multi-mode scenario.
+    std::vector<int> mode();
 
     // Returns max value in container.
     T max();
@@ -173,7 +176,7 @@ public:
     int get_index(std::vector<unsigned int> coordinates);
 
 private:
-    void sort_worker(T * arr, const int sz);
+    void sort_worker(T * arr, const int sz, bool reverse = false);
 
 }; // End of Array class declarations.
 
@@ -329,7 +332,7 @@ void Array<T>::print_flat()
 }
 
 template<typename T>
-void Array<T>::sort_worker(T * arr, const int sz)
+void Array<T>::sort_worker(T * arr, const int sz, bool reverse)
 {
     // base case
     if (sz == 1)
@@ -377,8 +380,58 @@ void Array<T>::sort_worker(T * arr, const int sz)
         // element of the input array "arr".
         if (*(larr + lindex) < *(rarr + rindex))
         {
+            if (reverse)
+            {
+                *(arr + (sz-(index+1))) = *(larr + lindex);
+                lindex++;
+                index++;
+            }
+            else
+            {
+                *(arr + index) = *(larr + lindex);
+                lindex++;
+                index++;
+            }
+        }
+        else
+        {
+            if (reverse)
+            {
+                *(arr + (sz-(index+1))) = *(rarr + rindex);
+                rindex++;
+                index++;
+            }
+            else
+            {
+                *(arr + index) = *(rarr + rindex);
+                rindex++;
+                index++;
+            }
+        }
+    }
+
+    // Add any remaining elements from either sub-array.
+    while (lindex < lsz)
+    {
+        if (reverse)
+        {
+            *(arr + (sz-index-1)) = *(larr + lindex);
+            lindex++;
+            index++;
+        }
+        else
+        {
             *(arr + index) = *(larr + lindex);
             lindex++;
+            index++;
+        }
+    }
+    while (rindex < rsz)
+    {
+        if (reverse)
+        {
+            *(arr + (sz-index-1)) = *(rarr + rindex);
+            rindex++;
             index++;
         }
         else
@@ -389,20 +442,6 @@ void Array<T>::sort_worker(T * arr, const int sz)
         }
     }
 
-    // Add any remaining elements from either sub-array.
-    while (lindex < lsz)
-    {
-        *(arr + index) = *(larr + lindex);
-        lindex++;
-        index++;
-    }
-    while (rindex < rsz)
-    {
-        *(arr + index) = *(rarr + rindex);
-        rindex++;
-        index++;
-    }
-
     // free up any memory allocated to subs
     delete[] larr;
     delete[] rarr;
@@ -411,18 +450,12 @@ void Array<T>::sort_worker(T * arr, const int sz)
 } // end of sort_worker
 
 template<typename T>
-void Array<T>::sort()
+void Array<T>::sort(bool reverse)
 {
-    sort_worker(this->container, this->size);
+    sort_worker(this->container, this->size, reverse);
     return;
 }
-/*
-template<typename T>
-void Array<T>::rsort()
-{
 
-}
-*/
 template<typename T>
 void Array<T>::reverse()
 {
@@ -438,11 +471,25 @@ void Array<T>::reverse()
 template<typename T>
 bool Array<T>::is_sorted()
 {
-    for (int i = 0; i < this->size - 1; i++)
+    bool ascending = *(this->container) < *(this->container + 1);
+    if (ascending)
     {
-        if (*(this->container + i) > *(this->container + i + 1))
+        for (int i = 0; i < this->size - 1; i++)
         {
-            return false;
+            if (*(this->container + i) > *(this->container + i + 1))
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < this->size - 1; i++)
+        {
+            if (*(this->container + i) < *(this->container + i + 1))
+            {
+                return false;
+            }
         }
     }
     return true;

@@ -61,6 +61,19 @@ int main()
     std::cout << "e.min(): " << e.min() << std::endl;
     std::cout << "e.sum(): " << e.sum() << std::endl;
 
+    Array<int> f(25);
+    for (int i = 0; i < f.get_size(); i++)
+    {
+        f[i] = rand() % 100;
+    }
+    std::cout << "Array f: ";
+    f.print();
+    std::cout << std::endl;
+
+    f.sort(true);
+    std::cout << "Array f after f.sort(reverse=true): ";
+    f.print();
+    std::cout << std::endl;
 
     std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
     std::cout << "coordinate {0,0,1} (should be 1): " << b.get_index({0,0,1}) << std::endl;
