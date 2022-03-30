@@ -37,6 +37,7 @@
 
 #include<iostream>
 #include<vector>
+#include<map>
 #include<stdexcept>
 #include<cmath>
 
@@ -124,8 +125,8 @@ public:
 
     // Averages
     T mean();
-    T median();
-    //T mode();
+    T median(); // List must be sorted prior to call
+    std::vector<int> mode(); // returns vector to account for potential multi-mode scenario
 
     // Returns max value in container.
     T max();
@@ -459,13 +460,41 @@ T Array<T>::median()
     }
 }
 
-/*
 template<typename T>
-T Array<T>::mode()
+std::vector<int> Array<T>::mode()
 {
+    std::vector<int> multimode;
+    std::map<T, int> totals;
+    int max = 0;
+
+    for (int i = 0; i < this->size; i++)
+    {
+       if (totals.contains(*(this->container + i)))
+        {
+            totals[*(this->container + i)] = totals[*(this->container + i)] + 1;
+        }
+        else
+        {
+            totals[*(this->container + i)] = 1;
+        }
+        if (totals[*(this->container + i)] > max)
+        {
+            max = totals[*(this->container + i)];
+        }
+    }
+
+    for (auto const& [key, val] : totals)
+    {
+        if (val == max)
+        {
+            multimode.push_back(key);
+        }
+    }
+
+    return multimode;
 
 }
-*/
+
 template<typename T>
 T Array<T>::max()
 {

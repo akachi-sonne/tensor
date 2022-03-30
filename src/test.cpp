@@ -38,12 +38,24 @@ int main()
     e.sort();
     e.print();
     std::cout << "sorted? " << e.is_sorted() << std::endl;
+    std::cout << "e.mean(): " << e.mean() << std::endl;
     std::cout << "e median: " << e.median() << std::endl;
+    std::cout << "e mode: ";
+    std::vector mode = e.mode();
+    for (int i = 0; i < mode.size(); i++)
+    {
+        std::cout << mode[i];
+        if (i < mode.size() - 1)
+        {
+            std::cout << ", ";
+        }
+    }
+    std::cout << std::endl;
 
     std::cout << "e.max(): " << e.max() << std::endl;
     std::cout << "e.min(): " << e.min() << std::endl;
     std::cout << "e.sum(): " << e.sum() << std::endl;
-    std::cout << "e.mean(): " << e.mean() << std::endl;
+
 
     std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
     std::cout << "coordinate {0,0,1} (should be 1): " << b.get_index({0,0,1}) << std::endl;
