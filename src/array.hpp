@@ -108,15 +108,20 @@ public:
     // ******************
     // * future methods *
     // ******************
-    // void reverse();
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
-    // Array<T> concat(); // deep concatenation. Creates new object.
+    // Array<T> concat(); // deep copy both arrays. Creates new object.
     // Array<T> slice();
     // ******************
 
     // Merge sort algorithm
     void sort();
+
+    // reverse sort
+    //void rsort();
+
+    // reverses elements in place
+    void reverse();
 
     // sorted? true or false
     bool is_sorted();
@@ -410,6 +415,24 @@ void Array<T>::sort()
 {
     sort_worker(this->container, this->size);
     return;
+}
+/*
+template<typename T>
+void Array<T>::rsort()
+{
+
+}
+*/
+template<typename T>
+void Array<T>::reverse()
+{
+    int temp;
+    for (int i = 0; i < this->size/2; i++)
+    {
+        temp = *(this->container + i);
+        *(this->container + i) = *(this->container + (this->size - i - 1));
+        *(this->container + (this->size - i - 1)) = temp;
+    }
 }
 
 template<typename T>

@@ -52,6 +52,11 @@ int main()
     }
     std::cout << std::endl;
 
+    e.reverse();
+    std::cout << "e reversed: ";
+    e.print();
+    std::cout << std::endl;
+
     std::cout << "e.max(): " << e.max() << std::endl;
     std::cout << "e.min(): " << e.min() << std::endl;
     std::cout << "e.sum(): " << e.sum() << std::endl;
