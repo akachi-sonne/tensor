@@ -63,11 +63,11 @@ class Array
     // Contiguous block of memory for element storage.
     T * container = new T[1];
 
+public:
+
     /******************************
      * Public Method Declarations *
      ******************************/
-
-public:
 
     // Constructor that takes an unsigned integer as size.
     // Basically a creates an empty linear array of length 'size'.
@@ -77,6 +77,9 @@ public:
     // Constructor taking a shape vector as a parameter.
     // Creates any shape N-dimensional array.
     Array(std::vector<unsigned int> shape);
+
+    // Copy constructor.
+    Array(const Array &rhs);
 
     // Destructor.
     ~Array();
@@ -90,6 +93,9 @@ public:
     // Returns this->shape.
     std::string get_shape() const;
 
+    // Returns 1-dimensional equivalent to n-dimensional
+    // indice parameters.
+    int get_index(std::vector<unsigned int> coordinates);
 
     // Prints Array according to current shape.
     // Passing a truthy parameter invokes verbose printing,
@@ -97,7 +103,6 @@ public:
     // statement.
     //
     void print(bool verbose = false);
-
 
     // Prints array of any dimension as if 1-dimensional.
     //
@@ -113,12 +118,6 @@ public:
     // Array<T> concat(); // deep copy both arrays. Creates new object.
     // Array<T> slice();
     // ******************
-
-    // Merge sort algorithm
-    void sort(bool reverse = false);
-
-    // reverses elements in place
-    void reverse();
 
     // Returns true if sorted in either ascending or descending order; else returns false.
     bool is_sorted();
@@ -141,6 +140,12 @@ public:
 
     // Returns min value in container.
     T min();
+
+    // Merge sort algorithm
+    void sort(bool reverse = false);
+
+    // reverses elements in place
+    void reverse();
 
     // Copy assignment operator.
     //
@@ -171,9 +176,7 @@ public:
     //
     T& operator ()(std::vector<unsigned int> index);
 
-    // Returns 1-dimensional equivalent to n-dimensional
-    // indice parameters.
-    int get_index(std::vector<unsigned int> coordinates);
+
 
 private:
     void sort_worker(T * arr, const int sz, bool reverse = false);
@@ -185,17 +188,20 @@ private:
  * Array Class Methods *
  ***********************/
 
+/* Constructors/destructor */
+
 template<typename T>
 Array<T>::Array(unsigned int size)
 {
     this->size = size;
-    this->shape = {size};
+    this->shape = {this->size};
     this->dims = 1;
 
     T * tmp_ptr = this->container;
     this->container = new T[size];
     delete[] tmp_ptr;
-}
+} // End constructor with size as argument
+
 template<typename T>
 Array<T>::Array(std::vector<unsigned int> shape)
 {
@@ -211,22 +217,46 @@ Array<T>::Array(std::vector<unsigned int> shape)
     T * tmp_ptr = this->container;
     this->container = new T[size];
     delete tmp_ptr;
-}
+} // End constructor with shape as argument.
+
+template<typename T>
+Array<T>::Array(const Array &rhs)
+{
+    // size, dims, shape, container
+    this->size = rhs.size;
+    this->dims = rhs.dims;
+    this->shape = rhs.shape;
+
+    T * tmp = this->container;
+    this->container = new T[this->size];
+    delete[] tmp;
+    for (int i = 0; i < this->size; i++)
+    {
+        *(this->container + i) = rhs.container[i];
+    }
+} // End copy constructor
+
 template<typename T>
 Array<T>::~Array()
 {
     delete[] this->container;
 }
+
+/* "get_member" methods */
 template<typename T>
 unsigned int Array<T>::get_size() const
 {
     return size;
 }
+
 template<typename T>
 unsigned int Array<T>::get_dims() const
 {
     return dims;
 }
+
+/* Output methods */
+
 template<typename T>
 std::string Array<T>::get_shape() const
 {
@@ -242,6 +272,7 @@ std::string Array<T>::get_shape() const
     str += "}";
     return str;
 }
+
 template<typename T>
 void Array<T>::print(bool verbose)
 {
@@ -313,6 +344,7 @@ void Array<T>::print(bool verbose)
     }
     std::cout <<"\n" << std::endl;
 }
+
 template<typename T>
 void Array<T>::print_flat()
 {
@@ -329,143 +361,6 @@ void Array<T>::print_flat()
         }
     }
     std::cout << "\n";
-}
-
-template<typename T>
-void Array<T>::sort_worker(T * arr, const int sz, bool reverse)
-{
-    // base case
-    if (sz == 1)
-    {
-        return;
-    }
-
-    // If size > 1, split in half and make recursive calls
-    // until all sub-arrays are of size 1.
-    const int lsz = floor(sz / 2); // left sub-array size
-    const int rsz = sz - lsz; // right sub-array size
-
-    // Heap allocated sub-arrays to avoid stack overflow
-    // from recursive calls.
-    T * larr = new T[lsz]; // left
-    T * rarr = new T[rsz]; // right
-
-    // Assign first half of input array to larr and second
-    // half to rarr.
-    int count = 0;
-    for (int i = 0; i < lsz; i++)
-    {
-        *(larr + i) = *(arr + count);
-        count++;
-    }
-    for (int i = 0; i < rsz; i++)
-    {
-        *(rarr + i) = *(arr + count);
-        count++;
-    }
-
-    // recursive calls
-    sort_worker(larr, lsz);
-    sort_worker(rarr, rsz);
-
-    // Sub-arrays should now be sorted.
-    // Proceed with merging.
-    int index = 0;
-    int lindex = 0;
-    int rindex = 0;
-    while (lindex < lsz && rindex < rsz)
-    {
-        // Compare next index in larr and rarr
-        // to insert the smaller of each as the next
-        // element of the input array "arr".
-        if (*(larr + lindex) < *(rarr + rindex))
-        {
-            if (reverse)
-            {
-                *(arr + (sz-(index+1))) = *(larr + lindex);
-                lindex++;
-                index++;
-            }
-            else
-            {
-                *(arr + index) = *(larr + lindex);
-                lindex++;
-                index++;
-            }
-        }
-        else
-        {
-            if (reverse)
-            {
-                *(arr + (sz-(index+1))) = *(rarr + rindex);
-                rindex++;
-                index++;
-            }
-            else
-            {
-                *(arr + index) = *(rarr + rindex);
-                rindex++;
-                index++;
-            }
-        }
-    }
-
-    // Add any remaining elements from either sub-array.
-    while (lindex < lsz)
-    {
-        if (reverse)
-        {
-            *(arr + (sz-index-1)) = *(larr + lindex);
-            lindex++;
-            index++;
-        }
-        else
-        {
-            *(arr + index) = *(larr + lindex);
-            lindex++;
-            index++;
-        }
-    }
-    while (rindex < rsz)
-    {
-        if (reverse)
-        {
-            *(arr + (sz-index-1)) = *(rarr + rindex);
-            rindex++;
-            index++;
-        }
-        else
-        {
-            *(arr + index) = *(rarr + rindex);
-            rindex++;
-            index++;
-        }
-    }
-
-    // free up any memory allocated to subs
-    delete[] larr;
-    delete[] rarr;
-
-    return;
-} // end of sort_worker
-
-template<typename T>
-void Array<T>::sort(bool reverse)
-{
-    sort_worker(this->container, this->size, reverse);
-    return;
-}
-
-template<typename T>
-void Array<T>::reverse()
-{
-    int temp;
-    for (int i = 0; i < this->size/2; i++)
-    {
-        temp = *(this->container + i);
-        *(this->container + i) = *(this->container + (this->size - i - 1));
-        *(this->container + (this->size - i - 1)) = temp;
-    }
 }
 
 template<typename T>
@@ -594,6 +489,162 @@ T Array<T>::min()
 }
 
 template<typename T>
+int Array<T>::get_index(std::vector<unsigned int> coordinates)
+{
+    assert(coordinates.size() == this->dims);
+    int index = 0;
+    for (int i = 0; i < this->dims; i++)
+    {
+        for (int j = this->dims -1; j > i; j--)
+        {
+            index += coordinates[i] * this->shape[j];
+        }
+    }
+    return index + coordinates[this->dims - 1];
+}
+
+/* Modification methods */
+
+template<typename T>
+void Array<T>::sort(bool reverse)
+{
+    sort_worker(this->container, this->size, reverse);
+    return;
+}
+
+template<typename T>
+void Array<T>::sort_worker(T * arr, const int sz, bool reverse)
+{
+    // base case
+    if (sz == 1)
+    {
+        return;
+    }
+
+    // If size > 1, split in half and make recursive calls
+    // until all sub-arrays are of size 1.
+    const int lsz = floor(sz / 2); // left sub-array size
+    const int rsz = sz - lsz; // right sub-array size
+
+    // Heap allocated sub-arrays to avoid stack overflow
+    // from recursive calls.
+    T * larr = new T[lsz]; // left
+    T * rarr = new T[rsz]; // right
+
+    // Assign first half of input array to larr and second
+    // half to rarr.
+    int count = 0;
+    for (int i = 0; i < lsz; i++)
+    {
+        *(larr + i) = *(arr + count);
+        count++;
+    }
+    for (int i = 0; i < rsz; i++)
+    {
+        *(rarr + i) = *(arr + count);
+        count++;
+    }
+
+    // recursive calls
+    sort_worker(larr, lsz);
+    sort_worker(rarr, rsz);
+
+    // Sub-arrays should now be sorted.
+    // Proceed with merging.
+    int index = 0;
+    int lindex = 0;
+    int rindex = 0;
+    while (lindex < lsz && rindex < rsz)
+    {
+        // Compare next index in larr and rarr
+        // to insert the smaller of each as the next
+        // element of the input array "arr".
+        if (*(larr + lindex) < *(rarr + rindex))
+        {
+            if (reverse)
+            {
+                *(arr + (sz-(index+1))) = *(larr + lindex);
+                lindex++;
+                index++;
+            }
+            else
+            {
+                *(arr + index) = *(larr + lindex);
+                lindex++;
+                index++;
+            }
+        }
+        else
+        {
+            if (reverse)
+            {
+                *(arr + (sz-(index+1))) = *(rarr + rindex);
+                rindex++;
+                index++;
+            }
+            else
+            {
+                *(arr + index) = *(rarr + rindex);
+                rindex++;
+                index++;
+            }
+        }
+    }
+
+    // Add any remaining elements from either sub-array.
+    while (lindex < lsz)
+    {
+        if (reverse)
+        {
+            *(arr + (sz-index-1)) = *(larr + lindex);
+            lindex++;
+            index++;
+        }
+        else
+        {
+            *(arr + index) = *(larr + lindex);
+            lindex++;
+            index++;
+        }
+    }
+    while (rindex < rsz)
+    {
+        if (reverse)
+        {
+            *(arr + (sz-index-1)) = *(rarr + rindex);
+            rindex++;
+            index++;
+        }
+        else
+        {
+            *(arr + index) = *(rarr + rindex);
+            rindex++;
+            index++;
+        }
+    }
+
+    // free up any memory allocated to subs
+    delete[] larr;
+    delete[] rarr;
+
+    return;
+} // end of sort_worker
+
+template<typename T>
+void Array<T>::reverse()
+{
+    int temp;
+    for (int i = 0; i < this->size/2; i++)
+    {
+        temp = *(this->container + i);
+        *(this->container + i) = *(this->container + (this->size - i - 1));
+        *(this->container + (this->size - i - 1)) = temp;
+    }
+}
+
+/* Operators */
+
+template<typename T>
 void Array<T>::operator =(T rhs)
 {
     for (int i = 0; i < this->size; i++)
@@ -623,19 +674,5 @@ T& Array<T>::operator ()(std::vector<unsigned int> index)
     return *(this->container + get_index(index));
 }
 
-template<typename T>
-int Array<T>::get_index(std::vector<unsigned int> coordinates)
-{
-    assert(coordinates.size() == this->dims);
-    int index = 0;
-    for (int i = 0; i < this->dims; i++)
-    {
-        for (int j = this->dims -1; j > i; j--)
-        {
-            index += coordinates[i] * this->shape[j];
-        }
-    }
-    return index + coordinates[this->dims - 1];
-}
 
 #endif

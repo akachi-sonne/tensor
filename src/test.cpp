@@ -75,6 +75,17 @@ int main()
     f.print();
     std::cout << std::endl;
 
+    Array<int> h = f;
+    std::cout << "h copied from f: ";
+    h.print();
+    std::cout << std::endl;
+    std::cout << "h.get_size: " << h.get_size() << std::endl;
+    std::cout << "h.get_dims: " << h.get_dims() << std::endl;
+    std::cout << "h.get_shape: " << h.get_shape() << std::endl;
+    std::cout << "f.get_size: " << f.get_size() << std::endl;
+    std::cout << "f.get_dims: " << f.get_dims() << std::endl;
+    std::cout << "f.get_shape: " << f.get_shape() << std::endl;
+
     std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
     std::cout << "coordinate {0,0,1} (should be 1): " << b.get_index({0,0,1}) << std::endl;
     std::cout << "coordinate {0,1,0} (should be 2): " << b.get_index({0,1,0}) << std::endl;
