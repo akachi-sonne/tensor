@@ -95,7 +95,7 @@ public:
 
     // Returns 1-dimensional equivalent to n-dimensional
     // indice parameters.
-    int get_index(std::vector<unsigned int> coordinates);
+    int get_index(std::vector<unsigned int> coordinates) const;
 
     // Prints Array according to current shape.
     // Passing a truthy parameter invokes verbose printing,
@@ -165,7 +165,7 @@ public:
     // Will return reference to value of index.
     // Can be used for value access or assignment to object.
     //
-    T& operator [](int index);
+    T& operator [](int index) const;
 
     // () Array index operator
     //
@@ -174,9 +174,10 @@ public:
     // Will return reference to value of index.
     // Can be used for value access or assignment.
     //
-    T& operator ()(std::vector<unsigned int> index);
+    T& operator ()(std::vector<unsigned int> index) const;
 
-
+    template<typename T1>
+    friend std::ostream& operator<<(std::ostream& out, const Array<T1> &arr);
 
 private:
     void sort_worker(T * arr, const int sz, bool reverse = false);
@@ -489,7 +490,7 @@ T Array<T>::min()
 }
 
 template<typename T>
-int Array<T>::get_index(std::vector<unsigned int> coordinates)
+int Array<T>::get_index(std::vector<unsigned int> coordinates) const
 {
     assert(coordinates.size() == this->dims);
     int index = 0;
@@ -653,7 +654,7 @@ void Array<T>::operator =(T rhs)
     }
 }
 template<typename T>
-T& Array<T>::operator [](int index)
+T& Array<T>::operator [](int index) const
 {
     assert(index < this->size);
     if (index >= 0)
@@ -669,10 +670,29 @@ T& Array<T>::operator [](int index)
 }
 
 template<typename T>
-T& Array<T>::operator ()(std::vector<unsigned int> index)
+T& Array<T>::operator ()(std::vector<unsigned int> index) const
 {
     return *(this->container + get_index(index));
 }
 
+template<typename T1>
+std::ostream& operator<<(std::ostream& out, const Array<T1>& arr)
+{
+    int sz = arr.get_size();
+    if (sz == 0)
+    {
+        out << "empty array";
+    }
+    else
+    {
+        out << "[" << std::to_string(arr[0]);
+        for (int i = 1; i < sz; i++)
+        {
+            out << ", " << std::to_string(arr[i]);
+        }
+        out << "]";
+    }
+    return out;
+}
 
 #endif

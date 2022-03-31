@@ -14,6 +14,7 @@ int main()
     a[9] = 13;
     std::cout << "should be 13: " << a[-1] << std::endl;
     a.print();
+    std::cout << "using ostream: " << a << std::endl;
     std::cout << a[0] << "\n" << std::endl;
     Array<int> b({3,2,2});
     b.print_flat();
