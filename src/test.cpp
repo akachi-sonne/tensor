@@ -1,7 +1,7 @@
 #include<iostream>
 #include<stdlib.h>
 #include<time.h>
-#include "array.hpp"
+#include "tensor.hpp"
 
 int main()
 {
