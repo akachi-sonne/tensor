@@ -1,6 +1,6 @@
-# clin
-Linear Algebra library for c++
+# Tensor
+Tensor arithmetic library for c++
 
-# Array class
-Dynamically allocated virtual N-dimensional array class.
+## Tensor class
+Dynamically allocated virtual N-dimensional array class stored in contiguous block of memory allowing for tensor arithmetic.
 
