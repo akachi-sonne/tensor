@@ -30,7 +30,7 @@
  * @author Doug Palmer
  * @version 1.0
  *
- * Description of class Array.
+ * Description of class Tensor.
  *
  * Multidimensional array class template stored in contiguous memory on
  * the heap.
@@ -54,7 +54,7 @@
 #include<cassert>
 
 template<typename T>
-class Array
+class Tensor
 {   /*******************************
      * Private Member Declarations *
      *******************************/
@@ -63,7 +63,7 @@ class Array
     unsigned int size;
 
     // Number of dimensions.
-    unsigned int dims;
+    unsigned int rank;
 
     // Size of each dimension.
     std::vector<unsigned int> shape;
@@ -79,24 +79,24 @@ public:
 
     // Constructor that takes an unsigned integer as size.
     // Basically a creates an empty linear array of length 'size'.
-    // eg. Array x(5); creates linear array of length 5.
-    Array(unsigned int size);
+    // eg. Tensor x(5); creates linear array of length 5.
+    Tensor(unsigned int size);
 
     // Constructor taking a shape vector as a parameter.
     // Creates any shape N-dimensional array.
-    Array(std::vector<unsigned int> shape);
+    Tensor(std::vector<unsigned int> shape);
 
     // Copy constructor.
-    Array(const Array &rhs);
+    Tensor(const Tensor &rhs);
 
     // Destructor.
-    ~Array();
+    ~Tensor();
 
     // Returns this->size.
     unsigned int get_size() const;
 
-    // Returns this->dims.
-    unsigned int get_dims() const;
+    // Returns this->rank.
+    unsigned int get_rank() const;
 
     // Returns this->shape.
     std::string get_shape() const;
@@ -105,9 +105,9 @@ public:
     // indice parameters.
     int get_index(std::vector<unsigned int> coordinates) const;
 
-    // Prints Array according to current shape.
+    // Prints Tensor according to current shape.
     // Passing a truthy parameter invokes verbose printing,
-    // which will include size, shape, and dims in the cout 
+    // which will include size, shape, and rank in the cout 
     // statement.
     //
     void print(bool verbose = false);
@@ -123,8 +123,8 @@ public:
     // ******************
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
-    // Array<T> concat(); // deep copy both arrays. Creates new object.
-    // Array<T> slice();
+    // Tensor<T> concat(); // deep copy both arrays. Creates new object.
+    // Tensor<T> slice();
     // ******************
 
     // Returns true if sorted in either ascending or descending order; else returns false.
@@ -138,7 +138,7 @@ public:
     // Returns sum()/size()
     T mean();
     // Returns middle most element or average of two middle elements.
-    // Array must be sorted in either ascending or descending order.
+    // Tensor must be sorted in either ascending or descending order.
     T median();
     // Returns most common element(s) as vector to account for potential multi-mode scenario.
     std::vector<int> mode();
@@ -165,7 +165,7 @@ public:
     //
     void operator =(T rhs);
 
-    // Array index operator
+    // Tensor index operator
     //
     // Accesses value based on 1-dimensional index.
     // For N-dimensional index access, use () operator.
@@ -175,7 +175,7 @@ public:
     //
     T& operator [](int index) const;
 
-    // () Array index operator
+    // () Tensor index operator
     //
     // Accesses value based on N-dimensional indice.
     //
@@ -185,26 +185,26 @@ public:
     T& operator ()(std::vector<unsigned int> index) const;
 
     template<typename T1>
-    friend std::ostream& operator<<(std::ostream& out, const Array<T1> &arr);
+    friend std::ostream& operator<<(std::ostream& out, const Tensor<T1> &arr);
 
 private:
     void sort_worker(T * arr, const int sz, bool reverse = false);
 
-}; // End of Array class declarations.
+}; // End of Tensor class declarations.
 
 
 /***********************
- * Array Class Methods *
+ * Tensor Class Methods *
  ***********************/
 
 /* Constructors/destructor */
 
 template<typename T>
-Array<T>::Array(unsigned int size)
+Tensor<T>::Tensor(unsigned int size)
 {
     this->size = size;
     this->shape = {this->size};
-    this->dims = 1;
+    this->rank = 1;
 
     T * tmp_ptr = this->container;
     this->container = new T[size];
@@ -212,13 +212,13 @@ Array<T>::Array(unsigned int size)
 } // End constructor with size as argument
 
 template<typename T>
-Array<T>::Array(std::vector<unsigned int> shape)
+Tensor<T>::Tensor(std::vector<unsigned int> shape)
 {
     this->shape = shape;
-    this->dims = shape.size();
+    this->rank = shape.size();
     this->size = 1;
 
-    for (int i = 0; i < this->dims; i++)
+    for (int i = 0; i < this->rank; i++)
     {
         this->size *= this->shape[i];
     }
@@ -229,11 +229,11 @@ Array<T>::Array(std::vector<unsigned int> shape)
 } // End constructor with shape as argument.
 
 template<typename T>
-Array<T>::Array(const Array &rhs)
+Tensor<T>::Tensor(const Tensor &rhs)
 {
-    // size, dims, shape, container
+    // size, rank, shape, container
     this->size = rhs.size;
-    this->dims = rhs.dims;
+    this->rank = rhs.rank;
     this->shape = rhs.shape;
 
     T * tmp = this->container;
@@ -246,34 +246,34 @@ Array<T>::Array(const Array &rhs)
 } // End copy constructor
 
 template<typename T>
-Array<T>::~Array()
+Tensor<T>::~Tensor()
 {
     delete[] this->container;
 }
 
 /* "get_member" methods */
 template<typename T>
-unsigned int Array<T>::get_size() const
+unsigned int Tensor<T>::get_size() const
 {
     return size;
 }
 
 template<typename T>
-unsigned int Array<T>::get_dims() const
+unsigned int Tensor<T>::get_rank() const
 {
-    return dims;
+    return rank;
 }
 
 /* Output methods */
 
 template<typename T>
-std::string Array<T>::get_shape() const
+std::string Tensor<T>::get_shape() const
 {
     std::string str = "{";
-    for (int i = 0; i < this->dims; i++)
+    for (int i = 0; i < this->rank; i++)
     {
         str += std::to_string(this->shape[i]);
-        if (i < this->dims - 1)
+        if (i < this->rank - 1)
         {
             str += ", ";
         }
@@ -283,15 +283,15 @@ std::string Array<T>::get_shape() const
 }
 
 template<typename T>
-void Array<T>::print(bool verbose)
+void Tensor<T>::print(bool verbose)
 {
     if (verbose)
     {
-        std::cout << "Array shape: {";
-        for (int i = 0; i < this->dims; i++)
+        std::cout << "Tensor shape: {";
+        for (int i = 0; i < this->rank; i++)
         {
             std::cout << this->shape[i];
-            if (i < this->dims - 1)
+            if (i < this->rank - 1)
             {
                 std::cout << ", ";
             }
@@ -300,17 +300,17 @@ void Array<T>::print(bool verbose)
                 std::cout << "}" << std::endl;
             }
         }
-        std::cout << "Number of dimensions: " << this->dims << std::endl;
+        std::cout << "Number of dimensions: " << this->rank << std::endl;
         std::cout << "Total elements: " << this->size << std::endl;
     }
 
-    int which_dim = this->dims;
+    int which_dim = this->rank;
     bool new_row = false;
-    int tracker[this->dims] = {0};
+    int tracker[this->rank] = {0};
     std::cout << "[";
     for (int i = 0; i < this->size; i++)
     {
-        int spaces = this->dims - which_dim;
+        int spaces = this->rank - which_dim;
         if (new_row)
         {
             for (int i = 0; i < spaces; i++)
@@ -330,10 +330,10 @@ void Array<T>::print(bool verbose)
         }
         std::cout << *(this->container + i);
         // update tracker
-        for (int j = this->dims-1; j >= 0; j--)
+        for (int j = this->rank-1; j >= 0; j--)
         {
             tracker[j]++;
-            which_dim = this->dims - j;
+            which_dim = this->rank - j;
             if (tracker[j] >= this->shape[j])
             {
                 which_dim++;
@@ -355,7 +355,7 @@ void Array<T>::print(bool verbose)
 }
 
 template<typename T>
-void Array<T>::print_flat()
+void Tensor<T>::print_flat()
 {
     std::cout << "[";
     for (int i = 0; i < this->size; i++)
@@ -373,7 +373,7 @@ void Array<T>::print_flat()
 }
 
 template<typename T>
-bool Array<T>::is_sorted()
+bool Tensor<T>::is_sorted()
 {
     bool ascending = *(this->container) < *(this->container + 1);
     if (ascending)
@@ -400,7 +400,7 @@ bool Array<T>::is_sorted()
 }
 
 template<typename T>
-T Array<T>::sum()
+T Tensor<T>::sum()
 {
     T total = 0;
     for (int i = 0; i < this->size; i++)
@@ -411,13 +411,13 @@ T Array<T>::sum()
 }
 
 template<typename T>
-T Array<T>::mean()
+T Tensor<T>::mean()
 {
     return float(sum() / this->size);
 }
 
 template<typename T>
-T Array<T>::median()
+T Tensor<T>::median()
 {
     assert(this->is_sorted());
 
@@ -435,7 +435,7 @@ T Array<T>::median()
 }
 
 template<typename T>
-std::vector<int> Array<T>::mode()
+std::vector<int> Tensor<T>::mode()
 {
     std::vector<int> multimode;
     std::map<T, int> totals;
@@ -470,7 +470,7 @@ std::vector<int> Array<T>::mode()
 }
 
 template<typename T>
-T Array<T>::max()
+T Tensor<T>::max()
 {
     int max = *(this->container);
     for (int i = 1; i < this->size; i++)
@@ -484,7 +484,7 @@ T Array<T>::max()
 }
 
 template<typename T>
-T Array<T>::min()
+T Tensor<T>::min()
 {
     int min = *(this->container);
     for (int i = 1; i < this->size; i++)
@@ -498,31 +498,31 @@ T Array<T>::min()
 }
 
 template<typename T>
-int Array<T>::get_index(std::vector<unsigned int> coordinates) const
+int Tensor<T>::get_index(std::vector<unsigned int> coordinates) const
 {
-    assert(coordinates.size() == this->dims);
+    assert(coordinates.size() == this->rank);
     int index = 0;
-    for (int i = 0; i < this->dims; i++)
+    for (int i = 0; i < this->rank; i++)
     {
-        for (int j = this->dims -1; j > i; j--)
+        for (int j = this->rank -1; j > i; j--)
         {
             index += coordinates[i] * this->shape[j];
         }
     }
-    return index + coordinates[this->dims - 1];
+    return index + coordinates[this->rank - 1];
 }
 
 /* Modification methods */
 
 template<typename T>
-void Array<T>::sort(bool reverse)
+void Tensor<T>::sort(bool reverse)
 {
     sort_worker(this->container, this->size, reverse);
     return;
 }
 
 template<typename T>
-void Array<T>::sort_worker(T * arr, const int sz, bool reverse)
+void Tensor<T>::sort_worker(T * arr, const int sz, bool reverse)
 {
     // base case
     if (sz == 1)
@@ -640,7 +640,7 @@ void Array<T>::sort_worker(T * arr, const int sz, bool reverse)
 } // end of sort_worker
 
 template<typename T>
-void Array<T>::reverse()
+void Tensor<T>::reverse()
 {
     int temp;
     for (int i = 0; i < this->size/2; i++)
@@ -654,7 +654,7 @@ void Array<T>::reverse()
 /* Operators */
 
 template<typename T>
-void Array<T>::operator =(T rhs)
+void Tensor<T>::operator =(T rhs)
 {
     for (int i = 0; i < this->size; i++)
     {
@@ -662,7 +662,7 @@ void Array<T>::operator =(T rhs)
     }
 }
 template<typename T>
-T& Array<T>::operator [](int index) const
+T& Tensor<T>::operator [](int index) const
 {
     assert(index < this->size);
     if (index >= 0)
@@ -678,13 +678,13 @@ T& Array<T>::operator [](int index) const
 }
 
 template<typename T>
-T& Array<T>::operator ()(std::vector<unsigned int> index) const
+T& Tensor<T>::operator ()(std::vector<unsigned int> index) const
 {
     return *(this->container + get_index(index));
 }
 
 template<typename T1>
-std::ostream& operator<<(std::ostream& out, const Array<T1>& arr)
+std::ostream& operator<<(std::ostream& out, const Tensor<T1>& arr)
 {
     int sz = arr.get_size();
     if (sz == 0)
