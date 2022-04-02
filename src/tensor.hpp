@@ -125,6 +125,16 @@ public:
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
     // Tensor<T> concat(); // deep copy both arrays. Creates new object.
     // Tensor<T> slice();
+    // Tensor<T> operator +(Tensor<T>& rhs);
+    // Tensor<T> operator +(T& rhs);
+    // Tensor<T> operator -(Tensor<T>& rhs);
+    // Tensor<T> operator -(T& rhs);
+    // Tensor<T> operator *(Tensor<T>& rhs);
+    // Tensor<T> operator *(T& rhs);
+    // Tensor<T> operator @(T& rhs);
+    // Tensor<T> inverse();
+    // Tensor<T> transpose();
+    // Tensor<T> det(); // returns determinant if nxn square matrix. Returns hyper-determinant if rank >= 3.
     // ******************
 
     // Returns true if sorted in either ascending or descending order; else returns false.
