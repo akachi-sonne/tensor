@@ -28,7 +28,7 @@ int main()
     d.print();
 
     Tensor<int> e(25);
-    for (int i = 0; i < e.get_size(); i++)
+    for (int i = 0; i < e.size(); i++)
     {
         e[i] = rand() % 100;
     }
@@ -63,7 +63,7 @@ int main()
     std::cout << "e.sum(): " << e.sum() << std::endl;
 
     Tensor<int> f(25);
-    for (int i = 0; i < f.get_size(); i++)
+    for (int i = 0; i < f.size(); i++)
     {
         f[i] = rand() % 100;
     }
@@ -80,27 +80,27 @@ int main()
     std::cout << "h copied from f: ";
     h.print();
     std::cout << std::endl;
-    std::cout << "h.get_size: " << h.get_size() << std::endl;
-    std::cout << "h.get_rank: " << h.get_rank() << std::endl;
-    std::cout << "h.get_shape: " << h.get_shape() << std::endl;
-    std::cout << "f.get_size: " << f.get_size() << std::endl;
-    std::cout << "f.get_rank: " << f.get_rank() << std::endl;
-    std::cout << "f.get_shape: " << f.get_shape() << std::endl;
+    std::cout << "h.size: " << h.size() << std::endl;
+    std::cout << "h.rank: " << h.rank() << std::endl;
+    std::cout << "h.shape: " << h.shape() << std::endl;
+    std::cout << "f.size: " << f.size() << std::endl;
+    std::cout << "f.rank: " << f.rank() << std::endl;
+    std::cout << "f.shape: " << f.shape() << std::endl;
 
     std::cout << "\nprinting using iterators:" << std::endl;
     for (auto i : f)
         std::cout << i << " ";
     std::cout << std::endl;
 
-    std::cout << "coordinate {0,0,0} (should be 0): " << b.get_index({0,0,0}) << std::endl;
-    std::cout << "coordinate {0,0,1} (should be 1): " << b.get_index({0,0,1}) << std::endl;
-    std::cout << "coordinate {0,1,0} (should be 2): " << b.get_index({0,1,0}) << std::endl;
-    std::cout << "coordinate {0,1,1} (should be 3): " << b.get_index({0,1,1}) << std::endl;
-    std::cout << "coordinate {2,0,0} (should be 8): " << b.get_index({2,0,0}) << std::endl;
+    std::cout << "coordinate {0,0,0} (should be 0): " << b.index({0,0,0}) << std::endl;
+    std::cout << "coordinate {0,0,1} (should be 1): " << b.index({0,0,1}) << std::endl;
+    std::cout << "coordinate {0,1,0} (should be 2): " << b.index({0,1,0}) << std::endl;
+    std::cout << "coordinate {0,1,1} (should be 3): " << b.index({0,1,1}) << std::endl;
+    std::cout << "coordinate {2,0,0} (should be 8): " << b.index({2,0,0}) << std::endl;
     std::cout << std::endl;
-    std::cout << "c.get_size(): " << c.get_size() << std::endl;
-    std::cout << "c.get_rank(): " << c.get_rank() << std::endl;
-    std::cout << "c.get_shape(): " << c.get_shape() << std::endl;
+    std::cout << "c.size(): " << c.size() << std::endl;
+    std::cout << "c.rank(): " << c.rank() << std::endl;
+    std::cout << "c.shape(): " << c.shape() << std::endl;
 
     return 0;
 }

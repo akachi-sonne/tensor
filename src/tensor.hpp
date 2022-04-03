@@ -61,17 +61,17 @@ class Tensor
      * Private Member Declarations *
      *******************************/
 
-    // Full size of container. i.e. Number of elements in array
-    unsigned int size;
+    // Full size of _container. i.e. Number of elements in array
+    unsigned int _size;
 
     // Number of dimensions.
-    unsigned int rank;
+    unsigned int _rank;
 
     // Length of each dimension.
-    std::vector<unsigned int> shape;
+    std::vector<unsigned int> _shape;
 
     // Contiguous block of memory for element storage.
-    T * container = new T[1];
+    T * _container = new T[1];
 
 public:
 
@@ -85,17 +85,68 @@ public:
 
         Iterator(pointer p) : ptr(p) {}
 
-        reference operator*() const { return *ptr; }
-        pointer operator->() { return ptr; }
+        reference operator*() const 
+        {
+            return *ptr;
+        }
+        pointer operator->() 
+        {
+            return ptr;
+        }
 
-        Iterator& operator++() { ptr++; return *this; } // Pre increment
-        Iterator operator++(T) { Iterator temp = *this; ++(*this); return temp; } // Post increment
+        // Pre increment
+        Iterator& operator++()
+        {
+            ptr++; return *this;
+        }
 
-        Iterator& operator--() { ptr--; return *this; } // Pre decrement
-        Iterator operator--(T) { Iterator temp = *this; --(*this); return temp; } // Post decrement
+        // Post increment
+        Iterator operator++(T)
+        {
+            Iterator temp = *this; ++(*this); return temp;
+        }
 
-        friend bool operator== (const Iterator& x, const Iterator& y) { return x.ptr == y.ptr; };
-        friend bool operator!= (const Iterator& x, const Iterator& y) { return x.ptr != y.ptr; };
+        // Pre decrement
+        Iterator& operator--()
+        {
+            ptr--; return *this;
+        }
+
+        // Post decrement
+        Iterator operator--(T)
+        {
+            Iterator temp = *this; --(*this); return temp;
+        }
+
+        friend bool operator== (const Iterator& x, const Iterator& y)
+        {
+            return x.ptr == y.ptr;
+        };
+
+        friend bool operator!= (const Iterator& x, const Iterator& y)
+        {
+            return x.ptr != y.ptr;
+        };
+
+        friend bool operator< (const Iterator& x, const Iterator& y)
+        {
+            return x.ptr < y.ptr;
+        };
+
+        friend bool operator> (const Iterator& x, const Iterator& y)
+        {
+            return x.ptr > y.ptr;
+        };
+
+        friend bool operator<= (const Iterator& x, const Iterator& y)
+        {
+            return x.ptr <= y.ptr;
+        };
+
+        friend bool operator>= (const Iterator& x, const Iterator& y)
+        {
+            return x.ptr >= y.ptr;
+        };
 
     private:
         pointer ptr;
@@ -104,12 +155,12 @@ public:
 
     Iterator begin()
     {
-        return Iterator(this->container);
+        return Iterator(this->_container);
     }
 
     Iterator end()
     {
-        return Iterator(this->container + this->size);
+        return Iterator(this->_container + this->_size);
     }
 
     /******************************
@@ -131,18 +182,18 @@ public:
     // Destructor.
     ~Tensor();
 
-    // Returns this->size.
-    unsigned int get_size() const;
+    // Returns this->_size.
+    unsigned int size() const;
 
-    // Returns this->rank.
-    unsigned int get_rank() const;
+    // Returns this->_rank.
+    unsigned int rank() const;
 
-    // Returns this->shape.
-    std::string get_shape() const;
+    // Returns this->_shape.
+    std::string shape() const;
 
     // Returns 1-dimensional equivalent to n-dimensional
     // indice parameters.
-    int get_index(std::vector<unsigned int> coordinates) const;
+    int index(std::vector<unsigned int> coordinates) const;
 
     // Prints Tensor according to current shape.
     // Passing a truthy parameter invokes verbose printing,
@@ -192,10 +243,10 @@ public:
     // Returns most common element(s) as vector to account for potential multi-mode scenario.
     std::vector<int> mode();
 
-    // Returns max value in container.
+    // Returns max value in _container.
     T max();
 
-    // Returns min value in container.
+    // Returns min value in _container.
     T min();
 
     // Merge sort algorithm
@@ -251,78 +302,78 @@ private:
 template<typename T>
 Tensor<T>::Tensor(unsigned int size)
 {
-    this->size = size;
-    this->shape = {this->size};
-    this->rank = 1;
+    this->_size = size;
+    this->_shape = {this->_size};
+    this->_rank = 1;
 
-    T * tmp_ptr = this->container;
-    this->container = new T[size];
+    T * tmp_ptr = this->_container;
+    this->_container = new T[this->_size];
     delete[] tmp_ptr;
 } // End constructor with size as argument
 
 template<typename T>
 Tensor<T>::Tensor(std::vector<unsigned int> shape)
 {
-    this->shape = shape;
-    this->rank = shape.size();
-    this->size = 1;
+    this->_shape = shape;
+    this->_rank = shape.size();
+    this->_size = 1;
 
-    for (int i = 0; i < this->rank; i++)
+    for (int i = 0; i < this->_rank; i++)
     {
-        this->size *= this->shape[i];
+        this->_size *= this->_shape[i];
     }
 
-    T * tmp_ptr = this->container;
-    this->container = new T[size];
+    T * tmp_ptr = this->_container;
+    this->_container = new T[this->_size];
     delete tmp_ptr;
 } // End constructor with shape as argument.
 
 template<typename T>
 Tensor<T>::Tensor(const Tensor &rhs)
 {
-    // size, rank, shape, container
-    this->size = rhs.size;
-    this->rank = rhs.rank;
-    this->shape = rhs.shape;
+    // size, rank, shape, _container
+    this->_size = rhs._size;
+    this->_rank = rhs._rank;
+    this->_shape = rhs._shape;
 
-    T * tmp = this->container;
-    this->container = new T[this->size];
+    T * tmp = this->_container;
+    this->_container = new T[this->_size];
     delete[] tmp;
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < this->_size; i++)
     {
-        *(this->container + i) = rhs.container[i];
+        *(this->_container + i) = rhs._container[i];
     }
 } // End copy constructor
 
 template<typename T>
 Tensor<T>::~Tensor()
 {
-    delete[] this->container;
+    delete[] this->_container;
 }
 
-/* "get_member" methods */
+/* "member" methods */
 template<typename T>
-unsigned int Tensor<T>::get_size() const
+unsigned int Tensor<T>::size() const
 {
-    return size;
+    return _size;
 }
 
 template<typename T>
-unsigned int Tensor<T>::get_rank() const
+unsigned int Tensor<T>::rank() const
 {
-    return rank;
+    return _rank;
 }
 
 /* Output methods */
 
 template<typename T>
-std::string Tensor<T>::get_shape() const
+std::string Tensor<T>::shape() const
 {
     std::string str = "{";
-    for (int i = 0; i < this->rank; i++)
+    for (int i = 0; i < this->_rank; i++)
     {
-        str += std::to_string(this->shape[i]);
-        if (i < this->rank - 1)
+        str += std::to_string(this->_shape[i]);
+        if (i < this->_rank - 1)
         {
             str += ", ";
         }
@@ -337,10 +388,10 @@ void Tensor<T>::print(bool verbose)
     if (verbose)
     {
         std::cout << "Tensor shape: {";
-        for (int i = 0; i < this->rank; i++)
+        for (int i = 0; i < this->_rank; i++)
         {
-            std::cout << this->shape[i];
-            if (i < this->rank - 1)
+            std::cout << this->_shape[i];
+            if (i < this->_rank - 1)
             {
                 std::cout << ", ";
             }
@@ -349,17 +400,17 @@ void Tensor<T>::print(bool verbose)
                 std::cout << "}" << std::endl;
             }
         }
-        std::cout << "Number of dimensions: " << this->rank << std::endl;
-        std::cout << "Total elements: " << this->size << std::endl;
+        std::cout << "Number of dimensions: " << this->_rank << std::endl;
+        std::cout << "Total elements: " << this->_size << std::endl;
     }
 
-    int which_dim = this->rank;
+    int which_dim = this->_rank;
     bool new_row = false;
-    int tracker[this->rank] = {0};
+    int tracker[this->_rank] = {0};
     std::cout << "[";
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < this->_size; i++)
     {
-        int spaces = this->rank - which_dim;
+        int spaces = this->_rank - which_dim;
         if (new_row)
         {
             for (int i = 0; i < spaces; i++)
@@ -377,13 +428,13 @@ void Tensor<T>::print(bool verbose)
             std::cout << "[";
             which_dim--;
         }
-        std::cout << *(this->container + i);
+        std::cout << *(this->_container + i);
         // update tracker
-        for (int j = this->rank-1; j >= 0; j--)
+        for (int j = this->_rank-1; j >= 0; j--)
         {
             tracker[j]++;
-            which_dim = this->rank - j;
-            if (tracker[j] >= this->shape[j])
+            which_dim = this->_rank - j;
+            if (tracker[j] >= this->_shape[j])
             {
                 which_dim++;
                 tracker[j] = 0;
@@ -395,7 +446,7 @@ void Tensor<T>::print(bool verbose)
                 break;
             }
         }
-        if (new_row && i < this->size - 1)
+        if (new_row && i < this->_size - 1)
         {
             std::cout << ",\n ";
         }
@@ -407,10 +458,10 @@ template<typename T>
 void Tensor<T>::print_flat()
 {
     std::cout << "[";
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < this->_size; i++)
     {
-        std::cout << *(this->container + i);
-        if (i < this->size -1)
+        std::cout << *(this->_container + i);
+        if (i < this->_size -1)
         {
             std::cout << ", ";
         } else 
@@ -424,12 +475,12 @@ void Tensor<T>::print_flat()
 template<typename T>
 bool Tensor<T>::is_sorted()
 {
-    bool ascending = *(this->container) < *(this->container + 1);
+    bool ascending = *(this->_container) < *(this->_container + 1);
     if (ascending)
     {
-        for (int i = 0; i < this->size - 1; i++)
+        for (int i = 0; i < this->_size - 1; i++)
         {
-            if (*(this->container + i) > *(this->container + i + 1))
+            if (*(this->_container + i) > *(this->_container + i + 1))
             {
                 return false;
             }
@@ -437,9 +488,9 @@ bool Tensor<T>::is_sorted()
     }
     else
     {
-        for (int i = 0; i < this->size - 1; i++)
+        for (int i = 0; i < this->_size - 1; i++)
         {
-            if (*(this->container + i) < *(this->container + i + 1))
+            if (*(this->_container + i) < *(this->_container + i + 1))
             {
                 return false;
             }
@@ -452,9 +503,9 @@ template<typename T>
 T Tensor<T>::sum()
 {
     T total = 0;
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < this->_size; i++)
     {
-        total += *(this->container + i);
+        total += *(this->_container + i);
     }
     return total;
 }
@@ -462,7 +513,7 @@ T Tensor<T>::sum()
 template<typename T>
 T Tensor<T>::mean()
 {
-    return float(sum() / this->size);
+    return float(sum() / this->_size);
 }
 
 template<typename T>
@@ -470,16 +521,16 @@ T Tensor<T>::median()
 {
     assert(this->is_sorted());
 
-    int mid = floor(this->size/2);
-    if (this->size % 2 == 0)
+    int mid = floor(this->_size/2);
+    if (this->_size % 2 == 0)
     {
-        T l = *(this->container + mid);
-        T r = *(this->container + mid + 1);
+        T l = *(this->_container + mid);
+        T r = *(this->_container + mid + 1);
         return (l + r) / 2;
     }
     else
     {
-        return *(this->container + mid);
+        return *(this->_container + mid);
     }
 }
 
@@ -490,19 +541,19 @@ std::vector<int> Tensor<T>::mode()
     std::map<T, int> totals;
     int max = 0;
 
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < this->_size; i++)
     {
-       if (totals.contains(*(this->container + i)))
+       if (totals.contains(*(this->_container + i)))
         {
-            totals[*(this->container + i)] = totals[*(this->container + i)] + 1;
+            totals[*(this->_container + i)] = totals[*(this->_container + i)] + 1;
         }
         else
         {
-            totals[*(this->container + i)] = 1;
+            totals[*(this->_container + i)] = 1;
         }
-        if (totals[*(this->container + i)] > max)
+        if (totals[*(this->_container + i)] > max)
         {
-            max = totals[*(this->container + i)];
+            max = totals[*(this->_container + i)];
         }
     }
 
@@ -521,12 +572,12 @@ std::vector<int> Tensor<T>::mode()
 template<typename T>
 T Tensor<T>::max()
 {
-    int max = *(this->container);
-    for (int i = 1; i < this->size; i++)
+    int max = *(this->_container);
+    for (int i = 1; i < this->_size; i++)
     {
-        if (max < *(this->container + i))
+        if (max < *(this->_container + i))
         {
-            max = *(this->container + i);
+            max = *(this->_container + i);
         }
     }
     return max;
@@ -535,30 +586,30 @@ T Tensor<T>::max()
 template<typename T>
 T Tensor<T>::min()
 {
-    int min = *(this->container);
-    for (int i = 1; i < this->size; i++)
+    int min = *(this->_container);
+    for (int i = 1; i < this->_size; i++)
     {
-        if (min > *(this->container + i))
+        if (min > *(this->_container + i))
         {
-            min = *(this->container + i);
+            min = *(this->_container + i);
         }
     }
     return min;
 }
 
 template<typename T>
-int Tensor<T>::get_index(std::vector<unsigned int> coordinates) const
+int Tensor<T>::index(std::vector<unsigned int> coordinates) const
 {
-    assert(coordinates.size() == this->rank);
+    assert(coordinates.size() == this->_rank);
     int index = 0;
-    for (int i = 0; i < this->rank; i++)
+    for (int i = 0; i < this->_rank; i++)
     {
-        for (int j = this->rank -1; j > i; j--)
+        for (int j = this->_rank -1; j > i; j--)
         {
-            index += coordinates[i] * this->shape[j];
+            index += coordinates[i] * this->_shape[j];
         }
     }
-    return index + coordinates[this->rank - 1];
+    return index + coordinates[this->_rank - 1];
 }
 
 /* Modification methods */
@@ -566,7 +617,7 @@ int Tensor<T>::get_index(std::vector<unsigned int> coordinates) const
 template<typename T>
 void Tensor<T>::sort(bool reverse)
 {
-    sort_worker(this->container, this->size, reverse);
+    sort_worker(this->_container, this->_size, reverse);
     return;
 }
 
@@ -692,11 +743,11 @@ template<typename T>
 void Tensor<T>::reverse()
 {
     int temp;
-    for (int i = 0; i < this->size/2; i++)
+    for (int i = 0; i < this->_size/2; i++)
     {
-        temp = *(this->container + i);
-        *(this->container + i) = *(this->container + (this->size - i - 1));
-        *(this->container + (this->size - i - 1)) = temp;
+        temp = *(this->_container + i);
+        *(this->_container + i) = *(this->_container + (this->_size - i - 1));
+        *(this->_container + (this->_size - i - 1)) = temp;
     }
 }
 
@@ -705,37 +756,37 @@ void Tensor<T>::reverse()
 template<typename T>
 void Tensor<T>::operator =(T rhs)
 {
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < this->_size; i++)
     {
-        *(this->container+i) = rhs;
+        *(this->_container+i) = rhs;
     }
 }
 template<typename T>
 T& Tensor<T>::operator [](int index) const
 {
-    assert(index < this->size);
+    assert(index < this->_size);
     if (index >= 0)
     {
-        return *(this->container + index);
+        return *(this->_container + index);
     }
     else
     {
-        int neg_index = this->size - (index - (2 * index));
-        assert(neg_index < this->size);
-        return *(this->container + neg_index);
+        int neg_index = this->_size - (index - (2 * index));
+        assert(neg_index < this->_size);
+        return *(this->_container + neg_index);
     }
 }
 
 template<typename T>
 T& Tensor<T>::operator ()(std::vector<unsigned int> index) const
 {
-    return *(this->container + get_index(index));
+    return *(this->_container + this->index(index));
 }
 
 template<typename T1>
 std::ostream& operator<<(std::ostream& out, const Tensor<T1>& arr)
 {
-    int sz = arr.get_size();
+    int sz = arr.size();
     if (sz == 0)
     {
         out << "empty array";
