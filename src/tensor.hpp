@@ -44,6 +44,8 @@
 #define ARRAY_H
 
 #include<iostream>
+#include<iterator>
+#include<cstddef>
 #include<vector>
 #include<map>
 #include<stdexcept>
@@ -65,13 +67,50 @@ class Tensor
     // Number of dimensions.
     unsigned int rank;
 
-    // Size of each dimension.
+    // Length of each dimension.
     std::vector<unsigned int> shape;
 
     // Contiguous block of memory for element storage.
     T * container = new T[1];
 
 public:
+
+    struct Iterator
+    {
+        using iterator_category = std::bidirectional_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+
+        Iterator(pointer p) : ptr(p) {}
+
+        reference operator*() const { return *ptr; }
+        pointer operator->() { return ptr; }
+
+        Iterator& operator++() { ptr++; return *this; } // Pre increment
+        Iterator operator++(T) { Iterator temp = *this; ++(*this); return temp; } // Post increment
+
+        Iterator& operator--() { ptr--; return *this; } // Pre decrement
+        Iterator operator--(T) { Iterator temp = *this; --(*this); return temp; } // Post decrement
+
+        friend bool operator== (const Iterator& x, const Iterator& y) { return x.ptr == y.ptr; };
+        friend bool operator!= (const Iterator& x, const Iterator& y) { return x.ptr != y.ptr; };
+
+    private:
+        pointer ptr;
+
+    };
+
+    Iterator begin()
+    {
+        return Iterator(this->container);
+    }
+
+    Iterator end()
+    {
+        return Iterator(this->container + this->size);
+    }
 
     /******************************
      * Public Method Declarations *
