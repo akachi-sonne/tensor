@@ -180,7 +180,7 @@ public:
     Tensor(const Tensor &rhs);
 
     // Move constructor
-    Tensor(Tensor&& other);
+    Tensor(Tensor&& other) noexcept;
 
     // Destructor.
     ~Tensor();
@@ -357,8 +357,9 @@ Tensor<T>::Tensor(std::vector<unsigned int> shape)
     delete tmp_ptr;
 } // End constructor with shape as argument.
 
+// Copy constructor
 template<typename T>
-Tensor<T>::Tensor(const Tensor &rhs)
+Tensor<T>::Tensor(const Tensor<T> &rhs)
 {
     // size, rank, shape, _container
     this->_size = rhs._size;
@@ -374,8 +375,9 @@ Tensor<T>::Tensor(const Tensor &rhs)
     }
 } // End copy constructor
 
+// Move constructor
 template<typename T>
-Tensor<T>::Tensor(Tensor&& other)
+Tensor<T>::Tensor(Tensor&& other) noexcept
 {
     // size, rank, shape, _container
     this->_size = other._size;
@@ -387,7 +389,7 @@ Tensor<T>::Tensor(Tensor&& other)
     other._rank = 0;
     other._shape.clear();
     other._container = nullptr;
-}
+} // End move constructor
 
 template<typename T>
 Tensor<T>::~Tensor()
@@ -787,11 +789,11 @@ template<typename T>
 void Tensor<T>::reverse()
 {
     int temp;
-    for (int i = 0; i < this->_size/2; i++)
+    for ( int i = 0; i < this->_size / 2; i++ )
     {
-        temp = *(this->_container + i);
-        *(this->_container + i) = *(this->_container + (this->_size - i - 1));
-        *(this->_container + (this->_size - i - 1)) = temp;
+        temp = *( this->_container + i );
+        *( this->_container + i ) = *( this->_container + ( this->_size - i - 1 ) );
+        *( this->_container + ( this->_size - i - 1 ) ) = temp;
     }
 }
 
@@ -827,7 +829,7 @@ void Tensor<T>::operator=( T other )
     {
         *( this->_container+i ) = other;
     }
-}
+} // End fill assignment operator
 
 // Copy assignment operator
 template<typename T>
@@ -847,7 +849,7 @@ Tensor<T>& Tensor<T>::operator=( const Tensor<T>& other )
             *( this->_container + i ) = *( other._container + i );
         }
     }
-}
+} // End copy assignment operator
 
 // Move assignment operator
 template<typename T>
@@ -868,44 +870,45 @@ Tensor<T>& Tensor<T>::operator=( Tensor<T>&& other ) noexcept
         other._container = nullptr;
     }
     return *this;
-}
+} // End move assignment operator
 
+// Array index operator
 template<typename T>
 T& Tensor<T>::operator[]( int index ) const
 {
-    assert(index < this->_size);
-    if (index >= 0)
+    assert( index < this->_size );
+    if ( index >= 0 )
     {
-        return *(this->_container + index);
+        return *( this->_container + index );
     }
     else
     {
-        int neg_index = this->_size - (index - (2 * index));
-        assert(neg_index < this->_size);
-        return *(this->_container + neg_index);
+        int neg_index = this->_size - ( index - ( 2 * index ) );
+        assert( neg_index < this->_size );
+        return *( this->_container + neg_index );
     }
-}
+} // End array index operator
 
 template<typename T>
-T& Tensor<T>::operator()(std::vector<unsigned int> index) const
+T& Tensor<T>::operator()( std::vector<unsigned int> index ) const
 {
-    return *(this->_container + this->index(index));
+    return *( this->_container + this->index( index ) );
 }
 
 template<typename T1>
-std::ostream& operator<<(std::ostream& out, const Tensor<T1>& arr)
+std::ostream& operator<<( std::ostream& out, const Tensor<T1>& arr )
 {
     int sz = arr.size();
-    if (sz == 0)
+    if ( sz == 0 )
     {
         out << "empty array";
     }
     else
     {
         out << "[" << std::to_string(arr[0]);
-        for (int i = 1; i < sz; i++)
+        for ( int i = 1; i < sz; i++ )
         {
-            out << ", " << std::to_string(arr[i]);
+            out << ", " << std::to_string( arr[i] );
         }
         out << "]";
     }
