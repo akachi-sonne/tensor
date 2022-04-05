@@ -266,11 +266,11 @@ public:
 
     // Scalar subtraction operator
     //
-    //Tensor<T> operator -(T rhs);
+    Tensor<T> operator -( T rhs );
 
     // Tensor subtraction operator
     //
-    //Tensor<T> operator -(Tensor<T>& rhs);
+    Tensor<T> operator-( const Tensor<T>& rhs );
 
     // Scalar multiplication operator
     //
@@ -843,9 +843,36 @@ Tensor<T> Tensor<T>::operator+( const Tensor<T>& rhs )
     return tmp;
 } // End matrix addition operator
 
+// Scalar subtraction operator
+template<typename T>
+Tensor<T> Tensor<T>::operator-( const T rhs )
+{
+    Tensor<T> tmp( this->_size );
+
+    for ( int i = 0; i < tmp._size; i++ )
+    {
+        *( tmp._container + i ) = *( this->_container + i ) - rhs;
+    }
+    return tmp;
+} // End scalar subtraction operator
+
+// Matrix subtraction operator
+template<typename T>
+Tensor<T> Tensor<T>::operator-( const Tensor<T>& rhs )
+{
+    assert ( this->_shape == rhs.shape() );
+
+    Tensor<T> tmp( this->_shape );
+
+    for ( int i = 0; i < this->_size; i++ )
+    {
+        *( tmp._container + i ) = *( this->_container + i ) - *( rhs._container + i );
+    }
+    return tmp;
+} // End matrix subtraction operator
+
 // Fill assignment operator
 // Accepts T variable and fills Tensor with that value.
-//
 template<typename T>
 void Tensor<T>::operator=( T other )
 {
