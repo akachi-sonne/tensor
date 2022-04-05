@@ -24,6 +24,11 @@ int main()
     for ( auto val : a2 )
         std::cout << val << std::endl;
 
+    a1 = a + a2;
+    std::cout << "a1 = a + a2: " << std::endl;
+    for ( auto val : a1 )
+        std::cout << val << std::endl;
+
     std::cout << "should be 13: " << a[-1] << std::endl;
     a.print();
     std::cout << "using ostream: " << a << std::endl;

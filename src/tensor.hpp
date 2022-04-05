@@ -26,7 +26,7 @@
 
 /*
  * -------------------------------------------------------------------------
- * @file array.hpp
+ * @file tensor.hpp
  * @author Doug Palmer
  * @version 1.0
  *
@@ -262,7 +262,7 @@ public:
 
     // Tensor addition operator
     //
-    // Tensor<T> operator +(Tensor<T>& lhs, Tensor<T>& rhs);
+    Tensor<T> operator+( const Tensor<T>& rhs );
 
     // Scalar subtraction operator
     //
@@ -815,6 +815,7 @@ void Tensor<T>::reverse()
 
 /* Operators */
 
+// Scalar addition operator
 template<typename T>
 Tensor<T> Tensor<T>::operator+( const T rhs )
 {
@@ -825,22 +826,23 @@ Tensor<T> Tensor<T>::operator+( const T rhs )
         *( tmp._container + i ) = *( this->_container + i ) + rhs;
     }
     return tmp;
-}
-/*
+} // End scalar addition operator
+
+// Matrix addition operator
 template<typename T>
-Tensor<T> Tensor<T>::operator+(const Tensor<T>& lhs, const Tensor<T>& rhs)
+Tensor<T> Tensor<T>::operator+( const Tensor<T>& rhs )
 {
-    assert (this->_shape == rhs.shape());
+    assert ( this->_shape == rhs.shape() );
 
-    Tensor<T> temp(this->_shape);
+    Tensor<T> tmp( this->_shape );
 
-    for (int i = 0; i < this->_size; i++)
+    for ( int i = 0; i < this->_size; i++ )
     {
-        temp[i] = *(this->_container + i) + *(rhs._container + i);
+        *( tmp._container + i ) = *( this->_container + i ) + *( rhs._container + i );
     }
-    return temp;
-}
-*/
+    return tmp;
+} // End matrix addition operator
+
 // Fill assignment operator
 // Accepts T variable and fills Tensor with that value.
 //
