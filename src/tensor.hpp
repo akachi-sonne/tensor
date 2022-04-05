@@ -179,6 +179,9 @@ public:
     // Copy constructor.
     Tensor(const Tensor &rhs);
 
+    // Move constructor
+    Tensor(Tensor&& other);
+
     // Destructor.
     ~Tensor();
 
@@ -215,12 +218,6 @@ public:
     // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
     // Tensor<T> concat(); // deep copy both arrays. Creates new object.
     // Tensor<T> slice();
-    // Tensor<T> operator +(Tensor<T>& rhs);
-    // Tensor<T> operator +(T& rhs);
-    // Tensor<T> operator -(Tensor<T>& rhs);
-    // Tensor<T> operator -(T& rhs);
-    // Tensor<T> operator *(Tensor<T>& rhs);
-    // Tensor<T> operator *(T& rhs);
     // Tensor<T> operator @(T& rhs);
     // Tensor<T> inverse();
     // Tensor<T> transpose();
@@ -255,15 +252,44 @@ public:
     // reverses elements in place
     void reverse();
 
-    // Copy assignment operator.
+    // Scalar addition operator
+    //
+//    Tensor<T> operator +( T rhs );
+
+    // Tensor addition operator
+    //
+    // Tensor<T> operator +(Tensor<T>& lhs, Tensor<T>& rhs);
+
+    // Scalar subtraction operator
+    //
+    //Tensor<T> operator -(T rhs);
+
+    // Tensor subtraction operator
+    //
+    //Tensor<T> operator -(Tensor<T>& rhs);
+
+    // Scalar multiplication operator
+    //
+    //Tensor<T> operator *(T rhs);
+
+    // Tensor multiplication operator
+    //
+    //Tensor<T> operator *(Tensor<T>& rhs);
+
+    // Fill assignment operator.
     //
     // Will assign individual value across every element if passed like:
     // object = value;
     //
-    // Will assign value to individual element if passed like:
-    // object[index] = value;
+    void operator=( T other );
+
+    // Copy assignment operator
     //
-    void operator =(T rhs);
+    Tensor<T>& operator=( const Tensor<T>& other );
+
+    // Move assignment operator
+    //
+    Tensor<T>& operator=( Tensor<T>&& other ) noexcept;
 
     // Tensor index operator
     //
@@ -283,6 +309,9 @@ public:
     // Can be used for value access or assignment.
     //
     T& operator ()(std::vector<unsigned int> index) const;
+
+    //template<typename F, typename P>
+    //friend F forEach(Tensor<T>& tnsr, F(*func)(P));
 
     template<typename T1>
     friend std::ostream& operator<<(std::ostream& out, const Tensor<T1> &arr);
@@ -344,6 +373,21 @@ Tensor<T>::Tensor(const Tensor &rhs)
         *(this->_container + i) = rhs._container[i];
     }
 } // End copy constructor
+
+template<typename T>
+Tensor<T>::Tensor(Tensor&& other)
+{
+    // size, rank, shape, _container
+    this->_size = other._size;
+    this->_rank = other._rank;
+    this->_shape = other._shape;
+    this->_container = other._container;
+
+    other._size = 0;
+    other._rank = 0;
+    other._shape.clear();
+    other._container = nullptr;
+}
 
 template<typename T>
 Tensor<T>::~Tensor()
@@ -752,17 +796,82 @@ void Tensor<T>::reverse()
 }
 
 /* Operators */
+/*
+template<typename T>
+Tensor<T> Tensor<T>::operator+( const T rhs )
+{
+    
+}
 
 template<typename T>
-void Tensor<T>::operator =(T rhs)
+Tensor<T> Tensor<T>::operator+(const Tensor<T>& lhs, const Tensor<T>& rhs)
 {
+    assert (this->_shape == rhs.shape());
+
+    Tensor<T> temp(this->_shape);
+
     for (int i = 0; i < this->_size; i++)
     {
-        *(this->_container+i) = rhs;
+        temp[i] = *(this->_container + i) + *(rhs._container + i);
+    }
+    return temp;
+}
+*/
+// Fill assignment operator
+// Accepts T variable and fills Tensor with that value.
+//
+template<typename T>
+void Tensor<T>::operator=( T other )
+{
+    for ( int i = 0; i < this->_size; i++ )
+    {
+        *( this->_container+i ) = other;
     }
 }
+
+// Copy assignment operator
 template<typename T>
-T& Tensor<T>::operator [](int index) const
+Tensor<T>& Tensor<T>::operator=( const Tensor<T>& other )
+{
+    if ( this != &other )
+    {
+        delete[] this->_container;
+
+        this->_size = other._size;
+        this->_rank = other._rank;
+        this->_shape = other._shape;
+
+        this->_container = new T[this->_size];
+        for ( int i = 0; i < this->_size; i++ )
+        {
+            *( this->_container + i ) = *( other._container + i );
+        }
+    }
+}
+
+// Move assignment operator
+template<typename T>
+Tensor<T>& Tensor<T>::operator=( Tensor<T>&& other ) noexcept
+{
+    if ( this != &other )
+    {
+        delete[] this->_container;
+
+        this->_size = other._size;
+        this->_rank = other._rank;
+        this->_shape = other._shape;
+        this->_container = other._container;
+
+        other._size = 0;
+        other._rank = 0;
+        other._shape.clear();
+        other._container = nullptr;
+    }
+    return *this;
+}
+
+template<typename T>
+T& Tensor<T>::operator[]( int index ) const
 {
     assert(index < this->_size);
     if (index >= 0)
@@ -778,7 +887,7 @@ T& Tensor<T>::operator [](int index) const
 }
 
 template<typename T>
-T& Tensor<T>::operator ()(std::vector<unsigned int> index) const
+T& Tensor<T>::operator()(std::vector<unsigned int> index) const
 {
     return *(this->_container + this->index(index));
 }

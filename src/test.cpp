@@ -12,6 +12,12 @@ int main()
     a = 1;
     a[3] = 5;
     a[9] = 13;
+
+    Tensor<int> a1 = a;
+    std::cout << "a1: " << std::endl;
+    for (auto val : a)
+        std::cout << val << std::endl;
+
     std::cout << "should be 13: " << a[-1] << std::endl;
     a.print();
     std::cout << "using ostream: " << a << std::endl;
@@ -92,6 +98,18 @@ int main()
         std::cout << i << " ";
     std::cout << std::endl;
 
+/*    Tensor<int> z(25);
+//    z = h + f;
+    std::cout << "z = h + f" << std::endl;
+    for (auto i : z)
+        std::cout << i << " ";
+    std::cout << std::endl;
+    z = z + 5;
+    std::cout << "z = z + 5" << std::endl;
+    for (auto i : z)
+        std::cout << i << " ";
+    std::cout << std::endl;
+*/
     std::cout << "coordinate {0,0,0} (should be 0): " << b.index({0,0,0}) << std::endl;
     std::cout << "coordinate {0,0,1} (should be 1): " << b.index({0,0,1}) << std::endl;
     std::cout << "coordinate {0,1,0} (should be 2): " << b.index({0,1,0}) << std::endl;
