@@ -15,7 +15,13 @@ int main()
 
     Tensor<int> a1 = a;
     std::cout << "a1: " << std::endl;
-    for (auto val : a)
+    for (auto val : a1)
+        std::cout << val << std::endl;
+
+    Tensor<int> a2;
+    a2 = a1 + 7;
+    std::cout << "a2 = a1 + 7: " << std::endl;
+    for ( auto val : a2 )
         std::cout << val << std::endl;
 
     std::cout << "should be 13: " << a[-1] << std::endl;

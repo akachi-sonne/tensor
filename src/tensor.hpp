@@ -167,6 +167,10 @@ public:
      * Public Method Declarations *
      ******************************/
 
+    // Default constructor
+    // Assigns everything to 0
+    Tensor();
+
     // Constructor that takes an unsigned integer as size.
     // Basically a creates an empty linear array of length 'size'.
     // eg. Tensor x(5); creates linear array of length 5.
@@ -254,7 +258,7 @@ public:
 
     // Scalar addition operator
     //
-//    Tensor<T> operator +( T rhs );
+    Tensor<T> operator +( T rhs );
 
     // Tensor addition operator
     //
@@ -328,11 +332,23 @@ private:
 
 /* Constructors/destructor */
 
+// Default constructor
 template<typename T>
-Tensor<T>::Tensor(unsigned int size)
+Tensor<T>::Tensor()
+{
+    this->_size = 0;
+    this->_shape = { 0 };
+    this->_rank = 0;
+    this->_container = nullptr;
+}
+
+// Constructor with size as parameter.
+// Defaults to 1 dimensional Tensor.
+template<typename T>
+Tensor<T>::Tensor( unsigned int size )
 {
     this->_size = size;
-    this->_shape = {this->_size};
+    this->_shape = { this->_size };
     this->_rank = 1;
 
     T * tmp_ptr = this->_container;
@@ -341,13 +357,13 @@ Tensor<T>::Tensor(unsigned int size)
 } // End constructor with size as argument
 
 template<typename T>
-Tensor<T>::Tensor(std::vector<unsigned int> shape)
+Tensor<T>::Tensor( std::vector<unsigned int> shape )
 {
     this->_shape = shape;
     this->_rank = shape.size();
     this->_size = 1;
 
-    for (int i = 0; i < this->_rank; i++)
+    for ( int i = 0; i < this->_rank; i++ )
     {
         this->_size *= this->_shape[i];
     }
@@ -798,13 +814,19 @@ void Tensor<T>::reverse()
 }
 
 /* Operators */
-/*
+
 template<typename T>
 Tensor<T> Tensor<T>::operator+( const T rhs )
 {
-    
-}
+    Tensor<T> tmp( this->_size );
 
+    for ( int i = 0; i < tmp._size; i++ )
+    {
+        *( tmp._container + i ) = *( this->_container + i ) + rhs;
+    }
+    return tmp;
+}
+/*
 template<typename T>
 Tensor<T> Tensor<T>::operator+(const Tensor<T>& lhs, const Tensor<T>& rhs)
 {
