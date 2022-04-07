@@ -340,6 +340,7 @@ private:
 /* Constructors/destructor */
 
 // Default constructor
+// initializes everything to zero.
 template<typename T>
 Tensor<T>::Tensor()
 {
@@ -347,7 +348,7 @@ Tensor<T>::Tensor()
     this->_shape = { 0 };
     this->_rank = 0;
     this->_container = nullptr;
-}
+} // end default constructor
 
 // Constructor with size as parameter.
 // Defaults to 1 dimensional Tensor.
@@ -363,6 +364,7 @@ Tensor<T>::Tensor( unsigned int size )
     delete[] tmp_ptr;
 } // End constructor with size as argument
 
+// Constructor with shape as arg
 template<typename T>
 Tensor<T>::Tensor( std::vector<unsigned int> shape )
 {
@@ -414,27 +416,33 @@ Tensor<T>::Tensor( Tensor&& other ) noexcept
     other._container = nullptr;
 } // End move constructor
 
+// destructor
 template<typename T>
 Tensor<T>::~Tensor()
 {
     delete[] this->_container;
-}
+} // end destructor
 
 /* Get member methods */
+
+// size
+// returns total amount of elements in tensor
 template<typename T>
 unsigned int Tensor<T>::size() const
 {
     return _size;
-}
+} // size
 
+// rank
+// returns number of dimensions in tensor
 template<typename T>
 unsigned int Tensor<T>::rank() const
 {
     return _rank;
-}
+} // end rank
 
-/* Output methods */
-
+// shape
+// returns length of each dimension
 template<typename T>
 std::string Tensor<T>::shape() const
 {
@@ -449,8 +457,13 @@ std::string Tensor<T>::shape() const
     }
     str += "}";
     return str;
-}
+} // end shape
 
+/* Output methods */
+
+// print
+// prints N-dimensional representation of tensor
+// based on shape and rank.
 template<typename T>
 void Tensor<T>::print( bool verbose )
 {
@@ -521,8 +534,11 @@ void Tensor<T>::print( bool verbose )
         }
     }
     std::cout <<"\n" << std::endl;
-}
+} // end print
 
+// print_flat
+// prints 1-D representation of tensor
+// regardless of shape or rank.
 template<typename T>
 void Tensor<T>::print_flat()
 {
@@ -539,8 +555,10 @@ void Tensor<T>::print_flat()
         }
     }
     std::cout << "\n";
-}
+} // end print_flat
 
+// is_sorted
+// returns true if sorted, else false
 template<typename T>
 bool Tensor<T>::is_sorted()
 {
@@ -566,8 +584,10 @@ bool Tensor<T>::is_sorted()
         }
     }
     return true;
-}
+} // end is_sorted
 
+// sum
+// total value of all elements added together
 template<typename T>
 T Tensor<T>::sum()
 {
@@ -577,14 +597,18 @@ T Tensor<T>::sum()
         total += *( this->_container + i );
     }
     return total;
-}
+} // end sum
 
+// mean
+// simple average
 template<typename T>
 T Tensor<T>::mean()
 {
     return float( sum() / this->_size );
-}
+} // end mean
 
+// median
+// Tensor must be sorted
 template<typename T>
 T Tensor<T>::median()
 {
@@ -601,8 +625,10 @@ T Tensor<T>::median()
     {
         return *( this->_container + mid );
     }
-}
+} // end median
 
+// mode
+// returns mode of array (or multimode if appropriate)
 template<typename T>
 std::vector<int> Tensor<T>::mode()
 {
@@ -636,8 +662,10 @@ std::vector<int> Tensor<T>::mode()
 
     return multimode;
 
-}
+} // mode
 
+// max
+// returns max value in tensor
 template<typename T>
 T Tensor<T>::max()
 {
@@ -650,8 +678,10 @@ T Tensor<T>::max()
         }
     }
     return max;
-}
+} // end max
 
+// min
+// returns minimum value in tensor
 template<typename T>
 T Tensor<T>::min()
 {
@@ -664,8 +694,10 @@ T Tensor<T>::min()
         }
     }
     return min;
-}
+} // end min
 
+// index method
+// returns 1-D index from 3-D coordinates
 template<typename T>
 int Tensor<T>::index( std::vector<unsigned int> coordinates ) const
 {
@@ -679,17 +711,23 @@ int Tensor<T>::index( std::vector<unsigned int> coordinates ) const
         }
     }
     return index + coordinates[this->_rank - 1];
-}
+} // end index method
+
 
 /* Modification methods */
 
+// sort tensor
+// calls helper method (sort_worker) to implement
+// recursive merge sort
 template<typename T>
 void Tensor<T>::sort( bool reverse )
 {
     sort_worker( this->_container, this->_size, reverse );
     return;
-}
+} // end sort
 
+// sort_worker
+// sorts recursively using merge sort algorithm
 template<typename T>
 void Tensor<T>::sort_worker( T * arr, const int sz, bool reverse )
 {
@@ -808,6 +846,7 @@ void Tensor<T>::sort_worker( T * arr, const int sz, bool reverse )
     return;
 } // end of sort_worker
 
+// Reverse method
 template<typename T>
 void Tensor<T>::reverse()
 {
@@ -818,7 +857,7 @@ void Tensor<T>::reverse()
         *( this->_container + i ) = *( this->_container + ( this->_size - i - 1 ) );
         *( this->_container + ( this->_size - i - 1 ) ) = temp;
     }
-}
+} // End reverse method
 
 /* Operators */
 
@@ -889,7 +928,7 @@ Tensor<T> Tensor<T>::operator*( T rhs )
         *( tmp._container + i ) = *( this->_container + i ) * rhs;
     }
     return tmp;
-}
+} // End scalar multiplication operator
 
 // Fill assignment operator
 // Accepts T variable and fills Tensor with that value.
@@ -960,12 +999,15 @@ T& Tensor<T>::operator[]( int index ) const
     }
 } // End array index operator
 
+// get-index operator
+// retrieves relative 1-D index from N-D coordinates
 template<typename T>
 T& Tensor<T>::operator()( std::vector<unsigned int> index ) const
 {
     return *( this->_container + this->index( index ) );
-}
+} // end get-index operator
 
+// ostream insertion operator
 template<typename T1>
 std::ostream& operator<<( std::ostream& out, const Tensor<T1>& arr )
 {
@@ -984,6 +1026,6 @@ std::ostream& operator<<( std::ostream& out, const Tensor<T1>& arr )
         out << "]";
     }
     return out;
-}
+} // end ostream insertion operator
 
 #endif
