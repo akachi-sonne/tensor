@@ -281,7 +281,7 @@ public:
 
     // Scalar multiplication operator
     //
-    //Tensor<T> operator*( T rhs );
+    Tensor<T> operator*( T rhs );
 
     // Tensor multiplication operator
     //
@@ -877,6 +877,19 @@ Tensor<T> Tensor<T>::operator-( const Tensor<T>& rhs )
     }
     return tmp;
 } // End matrix subtraction operator
+
+// Scalar multiplication operator
+template<typename T>
+Tensor<T> Tensor<T>::operator*( T rhs )
+{
+    Tensor<T> tmp( this->_shape );
+
+    for ( int i = 0; i < this->_size; i++ )
+    {
+        *( tmp._container + i ) = *( this->_container + i ) * rhs;
+    }
+    return tmp;
+}
 
 // Fill assignment operator
 // Accepts T variable and fills Tensor with that value.
