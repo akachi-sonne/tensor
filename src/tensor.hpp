@@ -179,7 +179,7 @@ public:
     Tensor();
 
     // Constructor that takes an unsigned integer as size.
-    // Basically a creates an empty linear array of length 'size'.
+    // Creates an empty linear array of length 'size'.
     // eg. Tensor x(5); creates linear array of length 5.
     Tensor( unsigned int size );
 
