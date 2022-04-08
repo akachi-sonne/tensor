@@ -54,7 +54,7 @@
 {
     // Takes an std::vector of unsigned integers as a parameter //
     // This will create a 3x3x3 Tensor of rank 3 and size 27. //
-    Tensor<float> object( {3, 3, 3} )
+    Tensor<float> object( {3, 3, 3} );
 }
 
 // Copy constructor //
@@ -66,5 +66,25 @@
 }
 
 
+ /********************\
+ * Get-member methods *
+ \********************/
+
+// Get size, shape, and rank. //
+{
+    // Instantiating object of shape 3x3x3. //
+    Tensor<int> object( {3,3,3} );
+
+    // Get size. //
+    int size = object.size();
+    // Get rank //
+    int rank = object.rank();
+    // Get shape //
+    std::string shape = object.shape();
+}
+
+ /****************\
+ * Output methods *
+ \****************/
 
 
