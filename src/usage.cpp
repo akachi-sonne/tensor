@@ -192,6 +192,50 @@ int main()
 
     }
 
+    { // Copy Assignment Operator
+
+        // Initializing a 3x3x3 Tensor and assigning random values.
+        srand ( time( NULL ) );
+        Tensor<int> object( {3x3x3} );
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand % 1000;
+        }
+
+        // Making a deep copy of the object into a new object.
+        Tensor<int> objectCopy = object;
+
+        objectCopy.print(1); // Printing to terminal with verbose option set to true.
+
+    }
+
+    { // Move Assignment Operator
+
+        // Initializing two 3x3 tensors to random values and printing objects.
+        srand ( time ( NULL ) );
+        Tensor<int> objectA( {3, 3} );
+        Tensor<int> objectB( {3, 3} );
+        for ( int i = 0; i < objectA.size(); i++ )
+        {
+            objectA[i] = rand % 1000;
+            objectB[i] = rand % 1000;
+        }
+
+        std::cout << "objectA: " << std::endl;
+        objectA.print();
+
+        std::cout << "objectB: " << std::endl;
+        objectB.print();
+
+        // Matrix addition of objectA and objectB and
+        // assigning the rvalue result to a new object.
+        Tensor<int> objectResult = objectA + objectB;
+
+        std::cout << "objectA + objectB: " << std::endl;
+        objectResult.print();
+
+    }
+
     // print() //
     // While an iterator is available with this library, this simple print 
     // method auto-formats to the objects shape and prints accordingly. There
