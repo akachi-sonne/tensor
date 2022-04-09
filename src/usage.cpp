@@ -125,8 +125,75 @@ int main()
 
     }
 
+     /*******************************\
+    *  Element Access and Assignment  *
+     \*******************************/
+
+    // Both the [] and () operators and a bi-directional iterator is available
+    // for indivdual element access.
+    // The = operator is overloaded for fill, copy, and move assignment.
+
+    { // [] and = operators to assign random values
+
+        srand( time( NULL ) );
+
+        // Initializing object of size 25
+        Tensor<int> object(25);
+
+        // Using the Assignment and Array Access Operator with a basic for loop
+        // to assign every element to a random value of type T between 1 - 100.
+        // Note: This same for loop will function identically on a Tensor of any rank.
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand % 100;
+        }
+
+        std::cout << "Assigning each element to rand % 100: " << std::endl;
+        object.print(); // printing object to terminal
+
+        // Individual element access on linear array.
+        std::cout << "object[3] = " << object[3] << std::endl;
+
+    }
+
+    { // () operator for element access of N-dimensional Tensor
+
+        srand( time( NULL ) );
+
+        // Initializing object of shape 3x3x3
+        Tensor<int> object( {3, 3, 3} );
+
+        // Using the Assignment and Array Access Operator with a basic for loop
+        // to assign every element to a random value of type T between 1 - 100.
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand % 100;
+        }
+
+        std::cout << "Assigning each element to rand % 100: " << std::endl;
+        object.print(); // printing object to terminal
+
+        // Individual element access on ND Tensor using () operator.
+        // Accepts an lvalue or rvalue std::vector.
+        std::cout << "object( {0,1,2} ) = " << object( {0, 1, 2} ) << std::endl;
+
+    }
+
+    { // Fill Assignment Operator
+
+        // Initializing object of size 25
+        Tensor<int> object(25);
+
+        // Using Fill Assignment Operator to assign every element to the same value.
+        object = 5;
+
+        std::cout << "Assigning every element to the same value using Fill Assignment Operator: " << std::endl;
+        object.print(); // printing object to terminal
+
+    }
+
     // print() //
-    // While am iterator is available with this library, this simple print 
+    // While an iterator is available with this library, this simple print 
     // method auto-formats to the objects shape and prints accordingly. There
     // is also a 'verbose' option which also prints out size, shape, and rank.
     {
@@ -153,7 +220,6 @@ int main()
         object.print_flat();
 
     }
-
 
 
     return 0;
