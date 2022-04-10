@@ -29,7 +29,7 @@
 
 // includes //
 #include<iostream>
-#include<stdlib>
+#include<stdlib.h>
 #include<time.h>
 #include "tensor.hpp"
 
@@ -45,7 +45,7 @@ int main()
     {
 
         // Initializes size and rank to zero, shape to {}, and container to nullptr.
-        Tensor<int> object();
+        Tensor<int> object;
 
     }
 
@@ -59,10 +59,9 @@ int main()
         std::cout << "Constructor with size as a parameter: " << std::endl;
 
         // outputting elements via iterator and range based loop.
-        for ( element : object )
+        for (double element : object )
             std::cout << element << " ";
         std::cout << std::endl;
-
     }
 
     // Constructor with shape as a parameter //
@@ -88,7 +87,7 @@ int main()
 
         std::cout << "Constructor with shape as a parameter: " << std::endl;
         std::cout << "objectA: " << std::endl;
-        for ( element : objectA )
+        for ( int element : objectA )
             std::cout << element << " ";
         std::cout << std::endl;
 
@@ -145,7 +144,7 @@ int main()
         // Note: This same for loop will function identically on a Tensor of any rank.
         for ( int i = 0; i < object.size(); i++ )
         {
-            object[i] = rand % 100;
+            object[i] = rand() % 100;
         }
 
         std::cout << "Assigning each element to rand % 100: " << std::endl;
@@ -153,6 +152,9 @@ int main()
 
         // Individual element access on linear array.
         std::cout << "object[3] = " << object[3] << std::endl;
+
+        // Python style reverse iteration using negative indices
+        std::cout << "object[-1] = " << object[-1] << std::endl;
 
     }
 
@@ -167,7 +169,7 @@ int main()
         // to assign every element to a random value of type T between 1 - 100.
         for ( int i = 0; i < object.size(); i++ )
         {
-            object[i] = rand % 100;
+            object[i] = rand() % 100;
         }
 
         std::cout << "Assigning each element to rand % 100: " << std::endl;
@@ -179,13 +181,20 @@ int main()
 
     }
 
+    { // Bi-directional Iterator
+
+        
+
+    }
+
     { // Fill Assignment Operator
+        // Simply a light wrapper of std::fill using = operator
 
         // Initializing object of size 25
         Tensor<int> object(25);
 
         // Using Fill Assignment Operator to assign every element to the same value.
-        object = 5;
+        object = 1;
 
         std::cout << "Assigning every element to the same value using Fill Assignment Operator: " << std::endl;
         object.print(); // printing object to terminal
@@ -196,10 +205,10 @@ int main()
 
         // Initializing a 3x3x3 Tensor and assigning random values.
         srand ( time( NULL ) );
-        Tensor<int> object( {3x3x3} );
+        Tensor<int> object( {3,3,3} );
         for ( int i = 0; i < object.size(); i++ )
         {
-            object[i] = rand % 1000;
+            object[i] = rand() % 1000;
         }
 
         // Making a deep copy of the object into a new object.
@@ -217,8 +226,8 @@ int main()
         Tensor<int> objectB( {3, 3} );
         for ( int i = 0; i < objectA.size(); i++ )
         {
-            objectA[i] = rand % 1000;
-            objectB[i] = rand % 1000;
+            objectA[i] = rand() % 1000;
+            objectB[i] = rand() % 1000;
         }
 
         std::cout << "objectA: " << std::endl;
@@ -244,13 +253,19 @@ int main()
 
         Tensor<int> objectA( {3,3,3} ); // 3x3x3 Tensor
         Tensor<int> objectB(25); // Simple linear array with 25 elements
-
+        objectA = 0;
+        std::cout << "objectA printing..." << std::endl;
         objectA.print();
+
+        std::cout << "objectB printing..." << std::endl;
         objectB.print();
 
-        // Simply pass any truthy argument for the verbose option.
+        // Simply pass any truthy argument as a parameter (preferable true or 1) for the verbose option.
+        std::cout << "objectA printing verbose..." << std::endl;
         objectA.print(1);
-        objectB.print(1);
+
+        std::cout << "objectB printing verbose..." << std::endl;
+        objectB.print(true);
 
     }
 

@@ -50,6 +50,7 @@
 #include<map>
 #include<stdexcept>
 #include<cmath>
+#include<algorithm>
 
 /* comment out the following line to turn on debugging. */
 #define NDEBUG
@@ -103,7 +104,7 @@ public:
         }
 
         // Post increment
-        Iterator operator++(T)
+        Iterator operator++( int )
         {
             Iterator temp = *this;
             ++( *this );
@@ -118,7 +119,7 @@ public:
         }
 
         // Post decrement
-        Iterator operator--( T )
+        Iterator operator--( int )
         {
             Iterator temp = *this;
             --( *this );
@@ -360,8 +361,9 @@ Tensor<T>::Tensor( unsigned int size )
     this->_rank = 1;
 
     T * tmp_ptr = this->_container;
-    this->_container = new T[this->_size];
+    this->_container = new T[this->_size]();
     delete[] tmp_ptr;
+
 } // End constructor with size as argument
 
 // Constructor with shape as arg
@@ -378,7 +380,7 @@ Tensor<T>::Tensor( std::vector<unsigned int> shape )
     }
 
     T * tmp_ptr = this->_container;
-    this->_container = new T[this->_size];
+    this->_container = new T[this->_size]();
     delete tmp_ptr;
 } // End constructor with shape as argument.
 
@@ -416,11 +418,13 @@ Tensor<T>::Tensor( Tensor&& other ) noexcept
     other._container = nullptr;
 } // End move constructor
 
-// destructor
+// Destructor
 template<typename T>
 Tensor<T>::~Tensor()
 {
+
     delete[] this->_container;
+
 } // end destructor
 
 /* Get member methods */
@@ -469,7 +473,7 @@ void Tensor<T>::print( bool verbose )
 {
     if ( verbose )
     {
-        std::cout << "Tensor shape: {";
+        std::cout << "Shape: {";
         for ( int i = 0; i < this->_rank; i++ )
         {
             std::cout << this->_shape[i];
@@ -482,8 +486,8 @@ void Tensor<T>::print( bool verbose )
                 std::cout << "}" << std::endl;
             }
         }
-        std::cout << "Number of dimensions: " << this->_rank << std::endl;
-        std::cout << "Total elements: " << this->_size << std::endl;
+        std::cout << "Rank: " << this->_rank << std::endl;
+        std::cout << "Size: " << this->_size << std::endl;
     }
 
     int which_dim = this->_rank;
@@ -935,10 +939,14 @@ Tensor<T> Tensor<T>::operator*( T rhs )
 template<typename T>
 void Tensor<T>::operator=( T other )
 {
+    std::fill( this->_container, this->_container + this->_size, other );
+
+    /*
     for ( int i = 0; i < this->_size; i++ )
     {
         *( this->_container + i ) = other;
     }
+    */
 } // End fill assignment operator
 
 // Copy assignment operator
