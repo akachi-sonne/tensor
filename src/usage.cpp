@@ -428,6 +428,44 @@ int main()
 
     }
 
+    // Math operators //
+    { // Subtraction
+
+        // supports scalar subtraction as well as tensor subtraction given that the
+        // two tensors are the same size and shape.
+
+        srand(time(NULL));
+
+        Tensor<int> objectA({3,3,3});
+        Tensor<int> objectB({3,3,3});
+
+        int size = objectA.size();
+        for ( int i = 0; i < size; i++ )
+        {
+            objectA[i] = rand() % 100;
+            objectB[i] = rand() % 100;
+        }
+
+        // using move assignment operator to hold value of new tensor after
+        // subtraction.
+        Tensor<int> objectResultA = objectA - 3; // scalar addition
+        Tensor<int> objectResultB = objectA - objectB;
+
+        std::cout << "\n\nobjectA: " << std::endl;
+        objectA.print();
+        std::cout << "objectB: " << std::endl;
+        objectB.print();
+        std::cout << "\nobjectA - 3: " << std::endl;
+        objectResultA.print();
+        std::cout << "\nobjectA - objectB: " << std::endl;
+        objectResultB.print();
+
+        // Note: objectA and objectB remain unchanged after both scalar and tensor
+        // subtraction operation. A new object is created and moved into a new object
+        // with the move assignment operator.
+
+
+    }
     return 0;
 } // End main()
 
