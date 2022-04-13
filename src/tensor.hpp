@@ -227,16 +227,19 @@ public:
     // * future methods *
     // ******************
     // bool every(); // Accepts a lambda. Checks if every elements passes a test.
-    // void for_each(); // Accepts a lambda. Iterates over array and applies given lambda to each element.
+    // void for_each(); // Accepts a lambda. Iterates over array and applies given 
+    // lambda to each element.
     // Tensor<T> concat(); // deep copy both arrays. Creates new object.
     // Tensor<T> slice();
     // Tensor<T> operator @(T& rhs);
     // Tensor<T> inverse();
     // Tensor<T> T(); // transpose
-    // Tensor<T> det(); // returns determinant if nxn square matrix. Returns hyper-determinant if rank >= 3.
+    // Tensor<T> det(); // returns determinant if nxn square matrix. Returns
+    // hyper-determinant if rank >= 3.
     // ******************
 
-    // Returns true if sorted in either ascending or descending order; else returns false.
+    // Returns true if sorted in either ascending or descending order; else returns
+    // false.
     bool is_sorted();
 
     // Simple addition of all elements.
@@ -647,7 +650,7 @@ std::vector<int> Tensor<T>::mode()
     {
        if ( totals.contains( *( this->_container + i ) ) )
         {
-            totals[ *( this->_container + i ) ] = totals[ *( this->_container + i ) ] + 1;
+            totals[*(this->_container + i)] = totals[*(this->_container + i)] + 1;
         }
         else
         {
