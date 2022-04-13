@@ -903,7 +903,7 @@ Tensor<T> Tensor<T>::operator+( const Tensor<T>& rhs )
 template<typename T>
 Tensor<T> Tensor<T>::operator-( const T rhs )
 {
-    Tensor<T> tmp( this->_size );
+    Tensor<T> tmp( this->_shape );
 
     for ( int i = 0; i < tmp._size; i++ )
     {
