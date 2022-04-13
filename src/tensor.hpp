@@ -204,7 +204,7 @@ public:
     unsigned int rank() const;
 
     // Returns this->_shape.
-    std::string shape() const;
+    std::vector<unsigned int> shape() const;
 
     // Returns 1-dimensional equivalent to n-dimensional
     // indice parameters.
@@ -272,15 +272,23 @@ public:
 
     // Scalar addition operator
     //
-    Tensor<T> operator+( T rhs );
+    Tensor<T> operator+( const T rhs );
 
     // Tensor addition operator
     //
     Tensor<T> operator+( const Tensor<T>& rhs );
 
+    // Scalar addition assignment operator
+    //
+    void operator+=( const T rhs );
+
+    // Tensor addition assignment operator
+    //
+    void operator+=( const Tensor<T>& rhs );
+
     // Scalar subtraction operator
     //
-    Tensor<T> operator-( T rhs );
+    Tensor<T> operator-( const T rhs );
 
     // Tensor subtraction operator
     //
@@ -288,7 +296,7 @@ public:
 
     // Scalar multiplication operator
     //
-    Tensor<T> operator*( T rhs );
+    Tensor<T> operator*( const T rhs );
 
     // Tensor multiplication operator
     //
@@ -454,19 +462,9 @@ unsigned int Tensor<T>::rank() const
 // shape
 // returns length of each dimension
 template<typename T>
-std::string Tensor<T>::shape() const
+std::vector<unsigned int> Tensor<T>::shape() const
 {
-    std::string str = "{";
-    for ( int i = 0; i < this->_rank; i++ )
-    {
-        str += std::to_string(this->_shape[i]);
-        if (i < this->_rank - 1)
-        {
-            str += ", ";
-        }
-    }
-    str += "}";
-    return str;
+    return _shape;
 } // end shape
 
 /* Output methods */
@@ -884,7 +882,7 @@ Tensor<T> Tensor<T>::operator+( const T rhs )
     return tmp;
 } // End scalar addition operator
 
-// Matrix addition operator
+// Tensor addition operator
 template<typename T>
 Tensor<T> Tensor<T>::operator+( const Tensor<T>& rhs )
 {
@@ -897,7 +895,30 @@ Tensor<T> Tensor<T>::operator+( const Tensor<T>& rhs )
         *(tmp._container + i) = *(this->_container + i) + *(rhs._container + i);
     }
     return tmp;
-} // End matrix addition operator
+} // End tensor addition operator
+
+// Scalar addition assignment operator
+template<typename T>
+void Tensor<T>::operator+=( const T rhs )
+{
+    for ( int i = 0; i < this->_size; i++ )
+    {
+        *(this->_container + i) += rhs;
+    }
+} // end addition assignment operator
+
+// Tensor addition assignment operator
+template<typename T>
+void Tensor<T>::operator+=( const Tensor<T>& rhs )
+{
+    assert ( this->_shape == rhs.shape() );
+
+    for ( int i = 0; i < this->_size; i++ )
+    {
+        *(this->_container + i) += *(rhs._container + i);
+    }
+}
+
 
 // Scalar subtraction operator
 template<typename T>
@@ -929,7 +950,7 @@ Tensor<T> Tensor<T>::operator-( const Tensor<T>& rhs )
 
 // Scalar multiplication operator
 template<typename T>
-Tensor<T> Tensor<T>::operator*( T rhs )
+Tensor<T> Tensor<T>::operator*( const T rhs )
 {
     Tensor<T> tmp( this->_shape );
 
