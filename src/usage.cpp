@@ -370,6 +370,26 @@ int main()
 
     }
 
+    // min/max //
+    {
+
+        srand(time(NULL));
+
+        Tensor<int> object({3,3,3});
+
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand() % 100;
+        }
+
+        std::cout << "object: " << std::endl;
+        object.print();
+
+        std::cout << "object max: " << object.max() << std::endl;
+        std::cout << "object min: " << object.min() << std::endl;
+
+    }
+
     return 0;
 } // End main()
 
