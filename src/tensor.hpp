@@ -248,15 +248,15 @@ public:
     /* Averages */
 
     // Returns sum()/size()
-    T mean();
+    float mean();
 
     // Returns middle most element or average of two middle elements.
     // Tensor must be sorted in either ascending or descending order.
-    T median();
+    float median();
 
     // Returns most common element(s) as vector to account for potential multi-mode
     // scenario.
-    std::vector<int> mode();
+    std::vector<T> mode();
 
     // Returns max value in _container.
     T max();
@@ -612,7 +612,7 @@ T Tensor<T>::sum()
 // mean
 // simple average
 template<typename T>
-T Tensor<T>::mean()
+float Tensor<T>::mean()
 {
     return float( sum() / this->_size );
 } // end mean
@@ -620,7 +620,7 @@ T Tensor<T>::mean()
 // median
 // Tensor must be sorted
 template<typename T>
-T Tensor<T>::median()
+float Tensor<T>::median()
 {
     assert( this->is_sorted() );
 
@@ -640,7 +640,7 @@ T Tensor<T>::median()
 // mode
 // returns mode of array (or multimode if appropriate)
 template<typename T>
-std::vector<int> Tensor<T>::mode()
+std::vector<T> Tensor<T>::mode()
 {
     std::vector<int> multimode;
     std::map<T, int> totals;
