@@ -296,16 +296,39 @@ int main()
 
         std::cout << "object after random initialization: " << std::endl;
         object.print();
+        std::cout << "bool is_sorted(): " << object.is_sorted() <<"\n" << std::endl;
 
         object.sort();
         std::cout << "object after sort method: " << std::endl;
         object.print();
+        std::cout << "bool is_sorted(): " << object.is_sorted() << "\n" << std::endl;
 
         // pass a truthy value in the sort method to reverse sort. object.sort(1) is acceptable.
         object.sort(true);
         std::cout << "object after reverse sort: " << std::endl;
         object.print();
+        std::cout << "bool is_sorted(): " << object.is_sorted() << "\n" << std::endl;
 
+    }
+
+    // reverse() // 
+    // reverses linear array representation in memory of tensor in place
+    {
+        srand( time( NULL ) );
+
+        Tensor<int> object(25);
+
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand() % 100;
+        }
+
+        std::cout << "Object after randome initialization: " << std::endl;
+        object.print();
+
+        std::cout << "Object after reverse method: " << std::endl;
+        object.reverse();
+        object.print();
     }
 
     return 0;
