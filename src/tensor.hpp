@@ -232,7 +232,7 @@ public:
     // Tensor<T> slice();
     // Tensor<T> operator @(T& rhs);
     // Tensor<T> inverse();
-    // Tensor<T> transpose();
+    // Tensor<T> T(); // transpose
     // Tensor<T> det(); // returns determinant if nxn square matrix. Returns hyper-determinant if rank >= 3.
     // ******************
 
@@ -246,10 +246,13 @@ public:
 
     // Returns sum()/size()
     T mean();
+
     // Returns middle most element or average of two middle elements.
     // Tensor must be sorted in either ascending or descending order.
     T median();
-    // Returns most common element(s) as vector to account for potential multi-mode scenario.
+
+    // Returns most common element(s) as vector to account for potential multi-mode
+    // scenario.
     std::vector<int> mode();
 
     // Returns max value in _container.
@@ -888,7 +891,7 @@ Tensor<T> Tensor<T>::operator+( const Tensor<T>& rhs )
 
     for ( int i = 0; i < this->_size; i++ )
     {
-        *( tmp._container + i ) = *( this->_container + i ) + *( rhs._container + i );
+        *(tmp._container + i) = *(this->_container + i) + *(rhs._container + i);
     }
     return tmp;
 } // End matrix addition operator
@@ -916,7 +919,7 @@ Tensor<T> Tensor<T>::operator-( const Tensor<T>& rhs )
 
     for ( int i = 0; i < this->_size; i++ )
     {
-        *( tmp._container + i ) = *( this->_container + i ) - *( rhs._container + i );
+        *(tmp._container + i) = *(this->_container + i) - *(rhs._container + i);
     }
     return tmp;
 } // End matrix subtraction operator
@@ -929,7 +932,7 @@ Tensor<T> Tensor<T>::operator*( T rhs )
 
     for ( int i = 0; i < this->_size; i++ )
     {
-        *( tmp._container + i ) = *( this->_container + i ) * rhs;
+        *(tmp._container + i) = *(this->_container + i) * rhs;
     }
     return tmp;
 } // End scalar multiplication operator
@@ -939,14 +942,8 @@ Tensor<T> Tensor<T>::operator*( T rhs )
 template<typename T>
 void Tensor<T>::operator=( T other )
 {
-    std::fill( this->_container, this->_container + this->_size, other );
+    std::fill(this->_container, this->_container + this->_size, other);
 
-    /*
-    for ( int i = 0; i < this->_size; i++ )
-    {
-        *( this->_container + i ) = other;
-    }
-    */
 } // End fill assignment operator
 
 // Copy assignment operator

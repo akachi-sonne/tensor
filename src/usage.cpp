@@ -1,30 +1,33 @@
 
-  /******************************************************************************************************\
- *                                                                                                        *
- * @file: usage.cpp                                                                                       *
- * @author: Doug Palmer                                                                                   *
- *                                                                                                        *
- *--------------------------------------------------------------------------------------------------------*
- *                                                                                                        *
- * Description:                                                                                           *
- *                                                                                                        *
- * The tensor library allows for the creation and manipulation of an N-dimensional tensor object.         *
- * Tensors are stored in a contiguous array on the heap to allow for relatively large objects to be       *
- * created without any worry of stack overflow.                                                           *
- *                                                                                                        *
- * Member variables include size, rank, shape, and container.  Size is the total amount of elements in    *
- * the tensor, rank is the amount of dimensions, and shape is the length of each dimension. Container     *
- * is the linear array that stores all the elements. Size, rank and shape can be accessed with methods    *
- * of the same name, while container remains private and can only be accessed indirectly using operators  *
- * and public methods.                                                                                    *
- *                                                                                                        *
- * It includes basic array methods such as sort(), reverse(), and print(). It also has a variety of over- *
- * loaded operators to both make element access intuitive as well as perform complex operations.          *
- *                                                                                                        *
- * Following is a basic walkthrough of usage of this library. Feel free to copy/paste or edit, play, and  *
- * break this file to your heart's delight. It can always be cloned from the repository again!            *
- *                                                                                                        *
-  \******************************************************************************************************/
+  /*********************************************************************************\
+ *                                                                                  *
+ * @file: usage.cpp                                                                 *
+ * @author: Doug Palmer                                                             *
+ *                                                                                  *
+ *----------------------------------------------------------------------------------*
+ *                                                                                  *
+ * Description:                                                                     *
+ *                                                                                  *
+ * The tensor library allows for the creation and manipulation of an N-dimensional  *
+ * tensor object. Tensors are stored in a contiguous array on the heap to allow for *
+ * relatively large objects to be created without any worry of stack overflow.      *
+ *                                                                                  *
+ * Member variables include size, rank, shape, and container.  Size is the total    *
+ * amount of elements in the tensor, rank is the amount of dimensions, and shape is *
+ * the length of each dimension. Container is the linear array that stores all the  *
+ * elements. Size, rank and shape can be accessed with methods of the same name,    *
+ * while container remains private and can only be accessed indirectly using        *
+ * operators and public methods.                                                    *
+ *                                                                                  *
+ * It includes basic array methods such as sort(), reverse(), and print(). It also  *
+ * has a variety of overloaded operators to both make element access intuitive as   *
+ * well as perform complex operations.                                              *
+ *                                                                                  *
+ * Following is a basic walkthrough of usage of this library. Feel free to          *
+ * copy/paste or edit, play, and break this file to your heart's delight. It can    *
+ * always be cloned from the repository again!                                      *
+ *                                                                                  *
+  \********************************************************************************/
 
 
 // includes //
@@ -39,7 +42,8 @@ int main()
      * Instantiating an object *
      \*************************/
 
-    // Note: This is a template class, so any object must have type specified upon instantiation.
+    // Note: This is a template class, so any object must have type specified upon
+    // instantiation.
 
     // Default constructor //
     {
@@ -141,7 +145,7 @@ int main()
 
         // Using the Assignment and Array Access Operator with a basic for loop
         // to assign every element to a random value of type T between 1 - 100.
-        // Note: This same for loop will function identically on a Tensor of any rank.
+        // Note: This same for loop will function identically on a Tensor of any rank
         for ( int i = 0; i < object.size(); i++ )
         {
             object[i] = rand() % 100;
@@ -260,7 +264,8 @@ int main()
         std::cout << "objectB printing..." << std::endl;
         objectB.print();
 
-        // Simply pass any truthy argument as a parameter (preferable true or 1) for the verbose option.
+        // Simply pass any truthy argument as a parameter (preferable true or 1) for 
+        // the verbose option.
         std::cout << "objectA printing verbose..." << std::endl;
         objectA.print(1);
 
@@ -282,7 +287,7 @@ int main()
 
     // sort() //
     // Sorts Tensor's linear array representation in memory using
-    // the merge sort algorithm. 
+    // the merge sort algorithm.
     {
 
         srand( time( NULL ) );
@@ -303,7 +308,8 @@ int main()
         object.print();
         std::cout << "bool is_sorted(): " << object.is_sorted() << "\n" << std::endl;
 
-        // pass a truthy value in the sort method to reverse sort. object.sort(1) is acceptable.
+        // pass a truthy value in the sort method to reverse sort. object.sort(1) is 
+        // acceptable.
         object.sort(true);
         std::cout << "object after reverse sort: " << std::endl;
         object.print();
@@ -311,7 +317,7 @@ int main()
 
     }
 
-    // reverse() // 
+    // reverse() //
     // reverses linear array representation in memory of tensor in place
     {
         srand( time( NULL ) );
