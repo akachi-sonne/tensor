@@ -183,7 +183,7 @@ int main()
 
     { // Bi-directional Iterator
 
-        
+        Tensor<int> object( {3,3,3} );
 
     }
 
@@ -280,6 +280,33 @@ int main()
 
     }
 
+    // sort() //
+    // Sorts Tensor's linear array representation in memory using
+    // the merge sort algorithm. 
+    {
+
+        srand( time( NULL ) );
+
+        Tensor<int> object(25); 
+
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand() % 100;
+        }
+
+        std::cout << "object after random initialization: " << std::endl;
+        object.print();
+
+        object.sort();
+        std::cout << "object after sort method: " << std::endl;
+        object.print();
+
+        // pass a truthy value in the sort method to reverse sort. object.sort(1) is acceptable.
+        object.sort(true);
+        std::cout << "object after reverse sort: " << std::endl;
+        object.print();
+
+    }
 
     return 0;
 } // End main()
