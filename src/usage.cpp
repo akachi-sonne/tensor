@@ -292,7 +292,7 @@ int main()
 
         srand( time( NULL ) );
 
-        Tensor<int> object(25); 
+        Tensor<int> object(20); 
 
         for ( int i = 0; i < object.size(); i++ )
         {
@@ -320,9 +320,9 @@ int main()
     // reverse() //
     // reverses linear array representation in memory of tensor in place
     {
-        srand( time( NULL ) );
+        srand(time(NULL));
 
-        Tensor<int> object(25);
+        Tensor<int> object(20);
 
         for ( int i = 0; i < object.size(); i++ )
         {
@@ -335,6 +335,39 @@ int main()
         std::cout << "Object after reverse method: " << std::endl;
         object.reverse();
         object.print();
+    }
+
+    // Averages //
+    // mean(), median(), and mode()
+    {
+
+        srand(time(NULL));
+
+        Tensor<int> object(20);
+
+        for ( int i = 0; i < object.size(); i++ )
+        {
+            object[i] = rand() % 20;
+        }
+
+        std::cout << "random initialized Tensor: " << std::endl;
+        object.print();
+
+        // mean() - returns float
+        std::cout << "object mean: " << object.mean() << std::endl;
+        // median - returns middle most element or average of two.
+        // Tensor must be sorted.
+        object.sort();
+        std::cout << "object median: " << object.median() << std::endl;
+        // mode - returns most common element as std::vector<T> to account for
+        // multimode. Vector must be same type as Tensor.
+        std::vector<int> objMode = object.mode();
+        std::cout << "object mode: " << std::endl;
+        std::cout << "{";
+        for ( auto val : objMode )
+            std::cout << val << ", ";
+        std::cout << "}" << std::endl;
+
     }
 
     return 0;
