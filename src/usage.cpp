@@ -473,8 +473,18 @@ int main()
         // subtraction operation. A new object is created and moved into a new object
         // with the move assignment operator.
 
+        // Scalar and tensor subtracion assignment operator
+        // Changes value of "this" rather than creating a new object.
+        std::cout << "\nobjectA -= 5: " << std::endl;
+        objectA -= 5;
+        objectA.print();
+
+        std::cout << "\nobjectA -= objectB: " << std::endl;
+        objectA -= objectB;
+        objectA.print();
 
     }
+
     return 0;
 } // End main()
 
