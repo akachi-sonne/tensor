@@ -310,6 +310,10 @@ public:
     //
     //Tensor<T> operator*( Tensor<T>& rhs );
 
+    // Dot product
+    //
+    long dot(Tensor<T>& rhs);
+
     // Fill assignment operator.
     //
     // Will assign individual value across every element if passed like:
@@ -990,6 +994,19 @@ Tensor<T> Tensor<T>::operator*( const T rhs )
     }
     return tmp;
 } // End scalar multiplication operator
+
+// dot product
+// must be equal size rank 1 tensors (vectors) of same type
+long dot(Tensor<T>& rhs)
+{
+    long dotProd = 0;
+
+    for ( int i = 0; i < lhs._size; i++ )
+    {
+        dotProd += *(this->_container + i) * *(rhs._container + i);
+    }
+    return dotProd;
+}
 
 // Fill assignment operator
 // Accepts T variable and fills Tensor with that value.
