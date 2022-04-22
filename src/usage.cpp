@@ -491,6 +491,29 @@ int main()
 
     }
 
+    // Dot Product
+    {
+        srand(time(NULL));
+
+        // two objects must be rank one and equal length
+        Tensor<int> objectA(25);
+        Tensor<int> objectB(25);
+
+        int size = objectA.size();
+        for (int i = 0; i < size; i++)
+        {
+            objectA[i] = rand() % 100;
+            objectB[i] = rand() % 100;
+        }
+
+        objectA.print(1);
+        objectB.print(1);
+
+        std::cout << "objectA.dot(objectB): " << objectA.dot(objectB) << std::endl;
+
+
+    }
+
     return 0;
 } // End main()
 
