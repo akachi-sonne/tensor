@@ -285,6 +285,12 @@ int main()
 
     }
 
+    // ostream << operator
+    {
+        Tensor<int> object( {3,3,3} );
+        std::cout << "using ostream operator: " << object << std::endl;
+    }
+
     // sort() //
     // Sorts Tensor's linear array representation in memory using
     // the merge sort algorithm.
