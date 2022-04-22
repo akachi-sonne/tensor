@@ -22,6 +22,11 @@ has a variety of overloaded operators to both make element access intuitive as
 well as perform complex operations.
 
 ## Usage
-Following is a basic walkthrough of usage of this library. Feel free to
-copy/paste or edit, play, and break this file to your heart's delight. It can
-always be cloned from the repository again!
+Following is a basic walkthrough of usage of this library. To view, run, or edit example code,
+check out the [usage.cpp]()(https://github.com/akachi-sonne/tensor/blob/main/src/usage.cpp) file.
+
+#### *Constructing a Tensor Object*
+
+- Default constructor
+Initializes size and rank to zero, shape to {}, and container to nullptr.
+```````````````````````````````
