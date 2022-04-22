@@ -312,7 +312,7 @@ public:
 
     // Dot product
     //
-    long dot(Tensor<T>& rhs);
+    T dot(Tensor<T>& rhs);
 
     // Fill assignment operator.
     //
@@ -997,11 +997,14 @@ Tensor<T> Tensor<T>::operator*( const T rhs )
 
 // dot product
 // must be equal size rank 1 tensors (vectors) of same type
-long dot(Tensor<T>& rhs)
+template<typename T>
+T Tensor<T>::dot(Tensor<T>& rhs)
 {
-    long dotProd = 0;
+    assert(this->_size == rhs._size);
+    assert(this->_rank == 1 && rhs._rank == 1);
+    T dotProd = 0;
 
-    for ( int i = 0; i < lhs._size; i++ )
+    for ( int i = 0; i < rhs._size; i++ )
     {
         dotProd += *(this->_container + i) * *(rhs._container + i);
     }
